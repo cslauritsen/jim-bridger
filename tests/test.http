@@ -1,0 +1,13 @@
+### Test to me from Hey
+POST https://jim-bridger.home.planetlauritsen.com/incoming
+Authorization: Bearer {{api-key}}
+Content-Type: text/plain
+
+{{test-eml}}
+
+### Localhost Test to me from Hey
+POST http://localhost:5000/incoming
+Authorization: Bearer wooga
+Content-Type: text/plain
+
+{{test-eml}}
