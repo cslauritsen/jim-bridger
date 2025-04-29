@@ -8,6 +8,7 @@ import logging
 
 import json
 
+
 class JsonFormatter(logging.Formatter):
     def format(self, record):
         log_record = {
@@ -20,6 +21,7 @@ class JsonFormatter(logging.Formatter):
             "lineNo": record.lineno,
         }
         return json.dumps(log_record)
+
 
 # Configure the logger
 logger = logging.root
@@ -37,6 +39,7 @@ SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
 
 loop = asyncio.get_event_loop()
+
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -80,10 +83,10 @@ def incoming_email():
             await aiosmtplib.send(
                 parsed_email,
                 hostname=SMTP_HOST,
-                # port=SMTP_PORT,
-                # username=os.environ.get('SMTP_USERNAME'),
-                # password=os.environ.get('SMTP_PASSWORD'),
-                # start_tls=True,
+                port=SMTP_PORT,
+                username=os.environ.get('SMTP_USERNAME', None),
+                password=os.environ.get('SMTP_PASSWORD', None),
+                start_tls=bool(os.environ.get('SMTP_STARTTLS', False)),
             )
 
         loop.run_until_complete(send_email())
