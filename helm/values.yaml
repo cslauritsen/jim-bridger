@@ -122,3 +122,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+smtp:
+  host: localhost
+  port: 25
+  starttls: false
+#  user: 'smtpuser'
+#  password: '**********'

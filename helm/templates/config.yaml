@@ -5,5 +5,8 @@ metadata:
   labels:
     {{- include "jim-bridger.labels" . | nindent 4 }}
 data:
-  SMTP_HOST: {{ required "smtpHost is required" .Values.smtpHost | quote }}
-  SMTP_PORT: {{  .Values.smtpPort | default 25 | quote }}
+  {{- with .Values.smtp }}
+  SMTP_HOST: {{ required "smtp.host is required" .host | quote }}
+  SMTP_PORT: {{ .port | default 25 | quote }}
+  SMTP_STARTTLS: {{ .starttls | default false | quote }}
+  {{- end }}
