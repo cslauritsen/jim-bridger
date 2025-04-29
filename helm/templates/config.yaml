@@ -1,0 +1,9 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "jim-bridger.fullname" . }}
+  labels:
+    {{- include "jim-bridger.labels" . | nindent 4 }}
+data:
+  SMTP_HOST: {{ required "smtpHost is required" .Values.smtpHost | quote }}
+  SMTP_PORT: {{  .Values.smtpPort | default 25 | quote }}
