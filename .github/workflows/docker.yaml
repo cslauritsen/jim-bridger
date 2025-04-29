@@ -55,7 +55,7 @@ jobs:
       - name: Package Helm chart
         run: |
           rm -fr ./packaged/
-          helm package ./helm --version ${RELEASE_TAG} -d packaged
+          helm package ./helm --version ${{ github.ref_name }} -d packaged
 
       # Push Helm chart to Docker Hub
       - name: Push Helm chart to Docker Hub
