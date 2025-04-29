@@ -79,6 +79,7 @@ def incoming_email():
 
         logger.info(f"Sending email from {sender} to {recipients}")
 
+        start_tls = os.environ.get('SMTP_STARTTLS', 'False').lower() == 'true'
         async def send_email():
             await aiosmtplib.send(
                 parsed_email,
@@ -86,7 +87,7 @@ def incoming_email():
                 port=SMTP_PORT,
                 username=os.environ.get('SMTP_USERNAME', None),
                 password=os.environ.get('SMTP_PASSWORD', None),
-                start_tls=bool(os.environ.get('SMTP_STARTTLS', False)),
+                start_tls=start_tls if start_tls else None,
             )
 
         loop.run_until_complete(send_email())
