@@ -5,9 +5,8 @@ import os
 import email
 from email import policy
 import logging
-
 import json
-
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -22,7 +21,6 @@ class JsonFormatter(logging.Formatter):
         }
         return json.dumps(log_record)
 
-
 # Configure the logger
 logger = logging.root
 logger.setLevel(logging.INFO)
@@ -30,31 +28,47 @@ logger.setLevel(logging.INFO)
 # Create a stream handler
 handler = logging.StreamHandler()
 handler.setFormatter(JsonFormatter())
-# Add the handler to the logger
 logger.addHandler(handler)
 app = Flask(__name__)
+
+# Suppress Flask's internal logging
+app.logger.setLevel(logging.WARNING)
+
+# Suppress Werkzeug request logging
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
+# Prometheus metrics
+SUCCESS_METRIC = Counter('email_bridge_success', 'Number of successfully bridged emails')
+FAILURE_METRIC = Counter('email_brigde_failure', 'Number of failed email bridging attempts')
+HEALTHCHECK_METRIC = Counter('email_brigde_healthcheck', 'Number of health check requests')
+AUTH_FAILED_METRIC = Counter('auth_failure', 'Number of failed authorization attempts')
+SCRAPE_METRIC = Counter('scrapes', 'Number of scrapes')
 
 SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
 
 loop = asyncio.get_event_loop()
-
-
 @app.route('/health', methods=['GET'])
 def health_check():
+    HEALTHCHECK_METRIC.inc()
     return "OK", 200
 
+@app.route('/metrics', methods=['GET'])
+def metrics():
+    SCRAPE_METRIC.inc()
+    return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 @app.route('/incoming', methods=['POST'])
 def incoming_email():
     auth_header = request.headers.get('Authorization')
     if auth_header != f"Bearer {MAIL_SECRET}":
+        AUTH_FAILED_METRIC.inc()
+        FAILURE_METRIC.inc()  # Increment failure metric
         abort(403)
 
     raw_email = request.data
 
-    # Parse email headers
     try:
         parsed_email = email.message_from_bytes(raw_email, policy=policy.default)
         sender = parsed_email.get('From')
@@ -62,11 +76,9 @@ def incoming_email():
         recipients = parsed_email.get_all('To', [])
         logger.debug(f"To: {recipients}")
 
-        # Normalize recipients into list
         if isinstance(recipients, str):
             recipients = [recipients]
 
-        # Optional: include Cc recipients too
         cc_recipients = parsed_email.get_all('Cc', [])
         if cc_recipients:
             if isinstance(cc_recipients, str):
@@ -75,6 +87,7 @@ def incoming_email():
 
         if not sender or not recipients:
             logger.error("No sender or recipients")
+            FAILURE_METRIC.inc()  # Increment failure metric
             abort(400, description="Missing sender or recipient information")
 
         logger.info(f"Sending email from {sender} to {recipients}")
@@ -91,12 +104,12 @@ def incoming_email():
             )
 
         loop.run_until_complete(send_email())
-
+        SUCCESS_METRIC.inc()  # Increment success metric
         return "Email accepted", 200
     except Exception as e:
         logger.info(f"Error parsing email: {e}")
+        FAILURE_METRIC.inc()  # Increment failure metric
         abort(400, description=f'failed to parse or send message')
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
