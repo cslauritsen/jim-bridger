@@ -1,0 +1,5 @@
+lambda_build/
+lambda.zip
+*.tfstate
+*.tfstate.backup
+.terraform/
