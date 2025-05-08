@@ -23,7 +23,6 @@ class JsonFormatter(logging.Formatter):
 
 # Configure the logger
 logger = logging.root
-logger.setLevel(logging.INFO)
 
 # Create a stream handler
 handler = logging.StreamHandler()
@@ -39,6 +38,10 @@ levels = {
     'DEBUG': logging.DEBUG,
 }
 
+# use envvar to configure root logger
+root_log_level = os.environ.get('LOG_LEVEL_ROOT', 'INFO').upper()
+logger.setLevel(levels.get(root_log_level, logging.INFO))
+
 # configure Flask's internal logging set to WARNING to quiet down
 flask_log_level = os.environ.get('LOG_LEVEL_FLASK', 'INFO').upper()
 app.logger.setLevel(levels.get(flask_log_level, logging.WARNING))
@@ -48,8 +51,8 @@ logging.getLogger('werkzeug').setLevel(levels.get(wz_level, logging.ERROR))
 
 # Prometheus metrics
 SUCCESS_METRIC = Counter('email_bridge_success', 'Number of successfully bridged emails')
-FAILURE_METRIC = Counter('email_brigde_failure', 'Number of failed email bridging attempts')
-HEALTHCHECK_METRIC = Counter('email_brigde_healthcheck', 'Number of health check requests')
+FAILURE_METRIC = Counter('email_bridge_failure', 'Number of failed email bridging attempts')
+HEALTHCHECK_METRIC = Counter('email_bridge_healthcheck', 'Number of health check requests')
 AUTH_FAILED_METRIC = Counter('auth_failure', 'Number of failed authorization attempts')
 SCRAPE_METRIC = Counter('scrapes', 'Number of scrapes')
 
@@ -60,12 +63,14 @@ MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
 loop = asyncio.get_event_loop()
 @app.route('/health', methods=['GET'])
 def health_check():
+    logger.debug('msg=health_check ip=%s ua="%s"', request.remote_addr, request.user_agent)
     HEALTHCHECK_METRIC.inc()
     return "OK", 200
 
 @app.route('/metrics', methods=['GET'])
 def metrics():
     SCRAPE_METRIC.inc()
+    logger.debug('msg=scrape ip=%s ua="%s"', request.remote_addr, request.user_agent)
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 @app.route('/incoming', methods=['POST'])
