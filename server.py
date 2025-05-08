@@ -31,11 +31,20 @@ handler.setFormatter(JsonFormatter())
 logger.addHandler(handler)
 app = Flask(__name__)
 
-# Suppress Flask's internal logging
-app.logger.setLevel(logging.WARNING)
+levels = {
+    'CRITICAL': logging.CRITICAL,
+    'ERROR': logging.ERROR,
+    'WARNING': logging.WARNING,
+    'INFO': logging.INFO,
+    'DEBUG': logging.DEBUG,
+}
 
-# Suppress Werkzeug request logging
-logging.getLogger('werkzeug').setLevel(logging.ERROR)
+# configure Flask's internal logging set to WARNING to quiet down
+flask_log_level = os.environ.get('LOG_LEVEL_FLASK', 'INFO').upper()
+app.logger.setLevel(levels.get(flask_log_level, logging.WARNING))
+# configure Werkzeug request logging (set to ERROR to quiet down)
+wz_level = os.environ.get('LOG_LEVEL_WERKZEUG', 'INFO').upper()
+logging.getLogger('werkzeug').setLevel(levels.get(wz_level, logging.ERROR))
 
 # Prometheus metrics
 SUCCESS_METRIC = Counter('email_bridge_success', 'Number of successfully bridged emails')
