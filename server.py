@@ -4,10 +4,13 @@ import asyncio
 import os
 import email
 from email import policy
-from email.utils import parseaddr
 import logging
 import json
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from email.utils import parseaddr, getaddresses
+from email.headerregistry import Address
+
+FORWARDER_ADDRESS = "ses-forwarder@planetlauritsen.com"
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -80,58 +83,67 @@ def incoming_email():
     auth_header = request.headers.get('Authorization')
     if auth_header != f"Bearer {MAIL_SECRET}":
         AUTH_FAILED_METRIC.inc()
-        FAILURE_METRIC.inc()  # Increment failure metric
+        FAILURE_METRIC.inc()
         abort(403)
 
     raw_email = request.data
 
     try:
         parsed_email = email.message_from_bytes(raw_email, policy=policy.default)
-        sender = parsed_email.get('From')
-        logger.debug(f"From: {sender}")
-        recipients = parsed_email.get_all('To', [])
-        logger.debug(f"To: {recipients}")
 
-        if isinstance(recipients, str):
-            recipients = [recipients]
+        # ---- Extract original sender from header ----
+        original_from = parsed_email.get('From', '')
+        _, original_sender = parseaddr(original_from)
 
-        cc_recipients = parsed_email.get_all('Cc', [])
-        if cc_recipients:
-            if isinstance(cc_recipients, str):
-                cc_recipients = [cc_recipients]
-            recipients.extend(cc_recipients)
+        # ---- Extract recipients (To + Cc) correctly ----
+        to_addresses = parsed_email.get_all('To', [])
+        cc_addresses = parsed_email.get_all('Cc', [])
 
-        if not sender or not recipients:
-            logger.error("No sender or recipients")
-            FAILURE_METRIC.inc()  # Increment failure metric
-            abort(400, description="Missing sender or recipient information")
+        all_recipients = getaddresses(to_addresses + cc_addresses)
+        recipients = [addr for _, addr in all_recipients if addr]
 
-        logger.info(f"Sending email from {sender} to {recipients}")
+        if not recipients:
+            logger.error("No recipients found in message")
+            FAILURE_METRIC.inc()
+            abort(400, description="Missing recipients")
 
-        _, sender_email = parseaddr(sender)
+        # ---- Force envelope sender for SMTP ----
+        envelope_sender = FORWARDER_ADDRESS
 
-        if not sender_email:
-            sender_email = f"jim-bridger@{DEFAULT_SENDER_DOMAIN}"
+        # ---- Ensure original sender is preserved in headers ----
+        if original_sender:
+            parsed_email.replace_header("From", original_from)
+            parsed_email["Reply-To"] = original_sender
+        else:
+            parsed_email.replace_header("From", FORWARDER_ADDRESS)
+
+        logger.info(f"Forwarding message: envelope-from={envelope_sender}, recipients={recipients}")
 
         start_tls = os.environ.get('SMTP_STARTTLS', 'False').lower() == 'true'
+
         async def send_email():
+            logger.debug("attempting SMTP forwarding")
             await aiosmtplib.send(
                 parsed_email,
-                sender=sender_email,
+                sender=envelope_sender,
+                recipients=recipients,
                 hostname=SMTP_HOST,
                 port=SMTP_PORT,
-                username=os.environ.get('SMTP_USERNAME', None),
-                password=os.environ.get('SMTP_PASSWORD', None),
-                start_tls=start_tls if start_tls else None,
+                username=os.environ.get('SMTP_USERNAME'),
+                password=os.environ.get('SMTP_PASSWORD'),
+                start_tls=start_tls,
             )
+            logger.debug(f"forwarded message via SMTP to {recipients}")
 
         loop.run_until_complete(send_email())
-        SUCCESS_METRIC.inc()  # Increment success metric
+
+        SUCCESS_METRIC.inc()
         return "Email accepted", 200
+
     except Exception as e:
-        logger.info(f"Error parsing email: {e}")
-        FAILURE_METRIC.inc()  # Increment failure metric
-        abort(400, description=f'failed to parse or send message')
+        logger.exception("Error processing incoming email")
+        FAILURE_METRIC.inc()
+        abort(400, description="Failed to parse or send message")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
