@@ -18,14 +18,11 @@ def lambda_handler(event, context):
         response = S3.get_object(Bucket=s3_bucket, Key=s3_object_key)
         email_content = response['Body'].read()
 
-        recipients = record['ses']['receipt']['recipients']
         # Send the email content to your home mail server
         headers = {
             'Authorization': f"Bearer {BRIDGE_SECRET}",
-            'Content-Type': 'application/octet-stream',
-            'X-Envelope-To': ','.join(recipients)
+            'Content-Type': 'application/octet-stream'
         }
-
 
         post_response = requests.post(
             BRIDGE_URL,
