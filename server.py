@@ -4,6 +4,7 @@ import asyncio
 import os
 import email
 from email import policy
+from email.utils import parseaddr
 import logging
 import json
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
@@ -59,6 +60,7 @@ SCRAPE_METRIC = Counter('scrapes', 'Number of scrapes')
 SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
+DEFAULT_SENDER_DOMAIN = os.environ.get('DEFAULT_SENDER_DOMAIN', 'planetlauritsen.com')
 
 loop = asyncio.get_event_loop()
 @app.route('/health', methods=['GET'])
@@ -106,10 +108,16 @@ def incoming_email():
 
         logger.info(f"Sending email from {sender} to {recipients}")
 
+        _, sender_email = parseaddr(sender)
+
+        if not sender_email:
+            sender_email = f"jim-bridger@{DEFAULT_SENDER_DOMAIN}"
+
         start_tls = os.environ.get('SMTP_STARTTLS', 'False').lower() == 'true'
         async def send_email():
             await aiosmtplib.send(
                 parsed_email,
+                sender=sender_email,
                 hostname=SMTP_HOST,
                 port=SMTP_PORT,
                 username=os.environ.get('SMTP_USERNAME', None),
