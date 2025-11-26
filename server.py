@@ -100,7 +100,12 @@ def incoming_email():
         cc_addresses = parsed_email.get_all('Cc', [])
 
         all_recipients = getaddresses(to_addresses + cc_addresses)
-        recipients = [addr for _, addr in all_recipients if addr]
+        # rewrite recips csl4jc@gmail.com or csla@hey.com with chad@planetlauritsen.com
+
+        recipients = [
+            "chad@planetlauritsen.com" if addr in {"csl4jc@gmail.com", "csla@hey.com"} else addr
+            for _, addr in all_recipients if addr
+        ]
 
         if not recipients:
             logger.error("No recipients found in message")
