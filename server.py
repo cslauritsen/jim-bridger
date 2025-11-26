@@ -95,12 +95,7 @@ def incoming_email():
         original_from = parsed_email.get('From', '')
         _, original_sender = parseaddr(original_from)
 
-        # ---- Extract recipients (To + Cc) correctly ----
-        to_addresses = parsed_email.get_all('To', [])
-        cc_addresses = parsed_email.get_all('Cc', [])
-
-        all_recipients = getaddresses(to_addresses + cc_addresses)
-        recipients = [addr for _, addr in all_recipients if addr]
+        recipients = request.headers.get('X-Envelope-To', '').split(',')
 
         if not recipients:
             logger.error("No recipients found in message")
