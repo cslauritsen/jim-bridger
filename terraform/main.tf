@@ -43,9 +43,17 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
         Action = [
           "s3:GetObject",
           "s3:DeleteObject",
+          "s3:PutObject",
         ],
         Resource = "${var.s3_bucket_arn}/*"
-      }
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ],
+        Resource = "${var.bridge_secret_arn}"
+      },
     ]
   })
 }
@@ -63,7 +71,6 @@ resource "aws_lambda_function" "ses_handler" {
   environment {
     variables = {
       BRIDGE_URL  = var.bridge_url
-      BRIDGE_SECRET = var.bridge_secret
     }
   }
 }
