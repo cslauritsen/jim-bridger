@@ -120,9 +120,13 @@ def incoming_email():
         envelope_sender = FORWARDER_ADDRESS
 
         # ---- Ensure original sender is preserved in headers ----
+        # Before setting Reply-To, check if it exists
         if original_sender:
             parsed_email.replace_header("From", original_from)
-            parsed_email["Reply-To"] = original_sender
+            if "Reply-To" in parsed_email:
+                parsed_email.replace_header("Reply-To", original_sender)
+            else:
+                parsed_email["Reply-To"] = original_sender
         else:
             parsed_email.replace_header("From", FORWARDER_ADDRESS)
 
