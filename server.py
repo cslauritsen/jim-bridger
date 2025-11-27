@@ -102,10 +102,14 @@ def incoming_email():
         all_recipients = getaddresses(to_addresses + cc_addresses)
         # rewrite recips csl4jc@gmail.com or csla@hey.com with chad@planetlauritsen.com
 
-        recipients = [
-            "chad@planetlauritsen.com" if addr in {"csl4jc@gmail.com", "csla@hey.com"} else addr
-            for _, addr in all_recipients if addr
-        ]
+        x_forwarded_to = parsed_email.get_all('X-Forwarded-To', [])
+        recipients = []
+        if len(x_forwarded_to) > 0:
+            logger.info(f"X-Forwarded-For detected: {x_forwarded_to}")
+            recipients.append(x_forwarded_to[0])
+        else:
+            for _, addr in all_recipients:
+                recipients.append(addr)
 
         if not recipients:
             logger.error("No recipients found in message")
@@ -146,7 +150,7 @@ def incoming_email():
         return "Email accepted", 200
 
     except Exception as e:
-        logger.exception("Error processing incoming email")
+        logger.exception(f"Error processing incoming email: {e}")
         FAILURE_METRIC.inc()
         abort(400, description="Failed to parse or send message")
 

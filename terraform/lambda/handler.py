@@ -31,17 +31,34 @@ def lambda_handler(event, context):
         )
 
         print(f"POST response: {post_response.status_code} - {post_response.text}")
-        if post_response.status_code == 400:
-            print("Bad request: check the email content")
-            S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
-            print(f"{s3_object_key} deleted")
-            return {'status': 'done'}
+        # if post_response.status_code == 400:
+        #     print("Bad request: check payload format")
+        #     quarantine_key = f"quarantine/{s3_object_key}"
+        #     S3.copy_object(
+        #         Bucket=s3_bucket,
+        #         CopySource={'Bucket': s3_bucket, 'Key': s3_object_key},
+        #         Key=quarantine_key
+        #     )
+        #     S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
+        #     print(f"{s3_object_key} quarantined as {quarantine_key}")
+        #     return {'status': 'done'}
 
-        if post_response.status_code >= 200 and post_response.status_code < 300:
+        if 200 <= post_response.status_code < 300:
             print("Email sent successfully")
             S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
             print(f"{s3_object_key} deleted")
+            return {'status': 'done'}
+        else:
+            print("Bad request: check payload format")
+            quarantine_key = f"quarantine/{s3_object_key}"
+            S3.copy_object(
+                Bucket=s3_bucket,
+                CopySource={'Bucket': s3_bucket, 'Key': s3_object_key},
+                Key=quarantine_key
+            )
+            S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
+            print(f"{s3_object_key} quarantined as {quarantine_key}")
+            return {'status': 'done'}
 
-        post_response.raise_for_status()
 
     return {'status': 'done'}
