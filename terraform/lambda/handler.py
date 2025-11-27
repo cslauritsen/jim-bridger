@@ -10,6 +10,7 @@ BRIDGE_URL = os.environ['BRIDGE_URL']  # e.g., https://mail-ingest.home.planetla
 
 def lambda_handler(event, context):
     print(f"Received event: {event}")
+    secret = get_secret()
 
     for record in event['Records']:
         s3_bucket = record['s3']['bucket']['name']
@@ -21,7 +22,7 @@ def lambda_handler(event, context):
 
         # Send the email content to your home mail server
         headers = {
-            'Authorization': f"Bearer {get_secret()}",
+            'Authorization': f"Bearer {secret}",
             'Content-Type': 'application/octet-stream'
         }
 
