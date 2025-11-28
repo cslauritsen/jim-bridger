@@ -10,6 +10,8 @@ from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from email.utils import parseaddr, getaddresses
 from email.headerregistry import Address
 
+DEFAULT_RECIPIENT = 'chad@planetlauritsen.com'
+
 FORWARDER_ADDRESS = "ses-forwarder@planetlauritsen.com"
 
 class JsonFormatter(logging.Formatter):
@@ -112,9 +114,10 @@ def incoming_email():
                 recipients.append(addr)
 
         if not recipients:
-            logger.error("No recipients found in message")
-            FAILURE_METRIC.inc()
-            abort(400, description="Missing recipients")
+            recipients.append(DEFAULT_RECIPIENT)
+            # logger.error("No recipients found in message")
+            # FAILURE_METRIC.inc()
+            # abort(400, description="Missing recipients")
 
         # ---- Force envelope sender for SMTP ----
         envelope_sender = FORWARDER_ADDRESS
@@ -139,7 +142,7 @@ def incoming_email():
             await aiosmtplib.send(
                 parsed_email,
                 sender=envelope_sender,
-                recipients=recipients,
+                recipients=recipients if len(recipients) > 0 else [DEFAULT_RECIPIENT],
                 hostname=SMTP_HOST,
                 port=SMTP_PORT,
                 username=os.environ.get('SMTP_USERNAME'),
