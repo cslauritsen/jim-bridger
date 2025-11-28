@@ -84,7 +84,7 @@ def incoming_email():
     if auth_header != f"Bearer {MAIL_SECRET}":
         AUTH_FAILED_METRIC.inc()
         FAILURE_METRIC.inc()
-        abort(403)
+        abort(401, description="Unauthorized")
 
     raw_email = request.data
 
@@ -151,7 +151,7 @@ def incoming_email():
         loop.run_until_complete(send_email())
 
         SUCCESS_METRIC.inc()
-        return "Email accepted", 200
+        return f"Email accepted for {','.join(recipients)}", 200
 
     except Exception as e:
         logger.exception(f"Error processing incoming email: {e}")
