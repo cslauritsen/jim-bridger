@@ -7,7 +7,6 @@ S3 = boto3.client('s3')
 
 BRIDGE_URL = os.environ['BRIDGE_URL']  # e.g., https://mail-ingest.home.planetlauritsen.com/incoming
 
-
 def lambda_handler(event, context):
     print(f"Received event: {event}")
     secret = get_secret()
@@ -43,6 +42,5 @@ def lambda_handler(event, context):
             print(f"Forwarding failed HTTP {post_response.status_code} check payload format")
             print(f"{s3_object_key} left in situ")
             return {'status': 'done'}
-
 
     return {'status': 'done'}
