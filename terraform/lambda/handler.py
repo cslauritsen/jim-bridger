@@ -1,14 +1,15 @@
 import os
 import boto3
 import requests
+from secret import get_secret
 
 S3 = boto3.client('s3')
 
 BRIDGE_URL = os.environ['BRIDGE_URL']  # e.g., https://mail-ingest.home.planetlauritsen.com/incoming
-BRIDGE_SECRET = os.environ['BRIDGE_SECRET']  # your shared auth token
 
 def lambda_handler(event, context):
     print(f"Received event: {event}")
+    secret = get_secret()
 
     for record in event['Records']:
         s3_bucket = record['s3']['bucket']['name']
@@ -20,7 +21,7 @@ def lambda_handler(event, context):
 
         # Send the email content to your home mail server
         headers = {
-            'Authorization': f"Bearer {BRIDGE_SECRET}",
+            'Authorization': f"Bearer {secret}",
             'Content-Type': 'application/octet-stream'
         }
 
@@ -31,17 +32,6 @@ def lambda_handler(event, context):
         )
 
         print(f"POST response: {post_response.status_code} - {post_response.text}")
-        # if post_response.status_code == 400:
-        #     print("Bad request: check payload format")
-        #     quarantine_key = f"quarantine/{s3_object_key}"
-        #     S3.copy_object(
-        #         Bucket=s3_bucket,
-        #         CopySource={'Bucket': s3_bucket, 'Key': s3_object_key},
-        #         Key=quarantine_key
-        #     )
-        #     S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
-        #     print(f"{s3_object_key} quarantined as {quarantine_key}")
-        #     return {'status': 'done'}
 
         if 200 <= post_response.status_code < 300:
             print("Email sent successfully")
@@ -49,16 +39,8 @@ def lambda_handler(event, context):
             print(f"{s3_object_key} deleted")
             return {'status': 'done'}
         else:
-            print("Bad request: check payload format")
-            quarantine_key = f"quarantine/{s3_object_key}"
-            S3.copy_object(
-                Bucket=s3_bucket,
-                CopySource={'Bucket': s3_bucket, 'Key': s3_object_key},
-                Key=quarantine_key
-            )
-            S3.delete_object(Bucket=s3_bucket, Key=s3_object_key)
-            print(f"{s3_object_key} quarantined as {quarantine_key}")
+            print(f"Forwarding failed HTTP {post_response.status_code} check payload format")
+            print(f"{s3_object_key} left in situ")
             return {'status': 'done'}
-
 
     return {'status': 'done'}
