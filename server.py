@@ -100,8 +100,9 @@ def incoming_email():
         # ---- Extract recipients (To + Cc) correctly ----
         to_addresses = parsed_email.get_all('To', [])
         cc_addresses = parsed_email.get_all('Cc', [])
+        bcc_addresses = parsed_email.get_all('Bcc', [])
 
-        all_recipients = getaddresses(to_addresses + cc_addresses)
+        all_recipients = getaddresses(to_addresses + cc_addresses + bcc_addresses)
         # rewrite recips csl4jc@gmail.com or csla@hey.com with chad@planetlauritsen.com
 
         x_forwarded_to = parsed_email.get_all('X-Forwarded-To', [])
