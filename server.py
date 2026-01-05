@@ -1,14 +1,14 @@
-from flask import Flask, request, abort
-import aiosmtplib
 import asyncio
-import os
 import email
-from email import policy
-import logging
 import json
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+import logging
+import os
+from email import policy
 from email.utils import parseaddr, getaddresses
-from email.headerregistry import Address
+
+import aiosmtplib
+from flask import Flask, request, abort
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
 DEFAULT_RECIPIENT = 'chad@planetlauritsen.com'
 
@@ -64,6 +64,7 @@ SCRAPE_METRIC = Counter('scrapes', 'Number of scrapes')
 
 SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
+SMTP_POLICY = policy.SMTPUTF8.clone(max_line_length=1024*1024)
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
 DEFAULT_SENDER_DOMAIN = os.environ.get('DEFAULT_SENDER_DOMAIN', 'planetlauritsen.com')
 
@@ -91,7 +92,7 @@ def incoming_email():
     raw_email = request.data
 
     try:
-        parsed_email = email.message_from_bytes(raw_email, policy=policy.default)
+        parsed_email = email.message_from_bytes(raw_email, policy=SMTP_POLICY)
 
         # ---- Extract original sender from header ----
         original_from = parsed_email.get('From', '')
