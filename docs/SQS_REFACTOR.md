@@ -1,3 +1,16 @@
+# Decision: Deployment vs CronJob
+Based on the requirements in this document, Jim Bridger should run as a **long-running deployment** for SQS polling. This is because:
+- SQS polling must be continuous to ensure timely email delivery and proper handling of retries/backoff.
+- A cron job would introduce unnecessary latency and complexity for exponential backoff and DLQ handling.
+- The document itself suggests a loop that continuously polls SQS.
+
+# Implementation Plan (Summary)
+- Add a new SQS polling function to the Python codebase (server.py or a new module).
+- Update Terraform to provision SQS, DLQ, S3 event triggers, and IAM roles/policies.
+- Update Kubernetes manifests (helm/templates/deployment.yaml) to support the new deployment mode and environment variables.
+- Remove/deprecate the Lambda function and its resources.
+- Update documentation accordingly.
+
 SQS Refactor
 
 # Current State
@@ -40,7 +53,6 @@ The pseudo code description follows:
 ## Deployment architecture
 Jim Bridger will be deployed as a containerized application in the existing k3s cluster, we can leave the HTTP functionality
 in place. We will modify the code to contain the SQS polling logic described above. The existing Lambda function can be decommissioned.
-## Question : should it run as a kubernetes cron job, or as a long-running deployment?
 ## Terraform 
 Terraform will maange the SQS queue, DLQ, add the SQS message trigger on the s3 bucket, and manage any necessary 
 IAM roles and policies for secure access to SQS and S3.
