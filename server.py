@@ -71,12 +71,17 @@ SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 SMTP_POLICY = policy.SMTPUTF8.clone(max_line_length=1024*1024)
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
 DEFAULT_SENDER_DOMAIN = os.environ.get('DEFAULT_SENDER_DOMAIN', 'planetlauritsen.com')
+sqs_failures = []
 
 loop = asyncio.get_event_loop()
 @app.route('/health', methods=['GET'])
 def health_check():
     logger.debug('msg=health_check ip=%s ua="%s"', request.remote_addr, request.user_agent)
     HEALTHCHECK_METRIC.inc()
+    if len(sqs_failures) > 5:
+        logger.error("SQS failures exceed threshold: %s", sqs_failures)
+        # allow crashloopbackoff so we don't spam SQS if misconfigured
+        return "SQS failures exceed threshold", 418
     return "OK", 200
 
 @app.route('/metrics', methods=['GET'])
@@ -117,22 +122,37 @@ def process_email_message(parsed_email):
         start_tls = os.environ.get('SMTP_STARTTLS', 'False').lower() == 'true'
         async def send_email():
             logger.debug("attempting SMTP forwarding")
-            await aiosmtplib.send(
-                parsed_email,
-                sender=envelope_sender,
-                recipients=recipients if len(recipients) > 0 else [DEFAULT_RECIPIENT],
-                hostname=SMTP_HOST,
-                port=SMTP_PORT,
-                username=os.environ.get('SMTP_USERNAME'),
-                password=os.environ.get('SMTP_PASSWORD'),
-                start_tls=start_tls,
-            )
-            logger.debug(f"forwarded message via SMTP to {recipients}")
-        loop.run_until_complete(send_email())
-        return True, recipients, None
+            try:
+                await aiosmtplib.send(
+                    parsed_email,
+                    sender=envelope_sender,
+                    recipients=recipients if len(recipients) > 0 else [DEFAULT_RECIPIENT],
+                    hostname=SMTP_HOST,
+                    port=SMTP_PORT,
+                    username=os.environ.get('SMTP_USERNAME'),
+                    password=os.environ.get('SMTP_PASSWORD'),
+                    start_tls=start_tls,
+                )
+                logger.debug(f"forwarded message via SMTP to {recipients}")
+                return True, None
+            except aiosmtplib.SMTPResponseException as smtp_exc:
+                logger.error(f"SMTP error: {smtp_exc.code} {smtp_exc.message}")
+                # 5xx is permanent, 4xx is transient
+                if 500 <= smtp_exc.code < 600:
+                    return False, True  # permanent failure
+                else:
+                    return False, False  # transient failure
+            except Exception as e:
+                logger.exception(f"Unexpected error in SMTP send: {e}")
+                return False, False  # treat as transient
+        send_success, permanent_fail = loop.run_until_complete(send_email())
+        if send_success:
+            return True, recipients, None
+        else:
+            return False, [], 'permanent' if permanent_fail else 'transient'
     except Exception as e:
         logger.exception(f"Error processing email: {e}")
-        return False, [], str(e)
+        return False, [], 'transient'
 
 @app.route('/incoming', methods=['POST'])
 def incoming_email():
@@ -223,15 +243,19 @@ def start_sqs_poller():
                                         raise
                                 raw_email = s3_obj['Body'].read()
                                 parsed_email = email.message_from_bytes(raw_email, policy=SMTP_POLICY)
-                                success, recipients, error = process_email_message(parsed_email)
+                                success, recipients, error_type = process_email_message(parsed_email)
                                 if success:
                                     s3.delete_object(Bucket=s3_bucket, Key=s3_key)
                                     logger.info(f"Successfully processed and deleted S3 object: {s3url}")
                                     SUCCESS_METRIC.inc()
                                 else:
-                                    logger.error(f"{s3url} Failed to process email from SQS record: {error}")
+                                    logger.error(f"{s3url} Failed to process email from SQS record: {error_type}")
                                     FAILURE_METRIC.inc()
-                                    all_success = False
+                                    if error_type == 'permanent':
+                                        logger.warning(f"Permanent failure for {s3url}, deleting SQS message to avoid retry loop.")
+                                        sqs.delete_message(QueueUrl=SQS_QUEUE_URL, ReceiptHandle=receipt_handle)
+                                    else:
+                                        all_success = False
                             except Exception as e:
                                 logger.exception(f"Error processing SQS record: {e}")
                                 FAILURE_METRIC.inc()
@@ -254,7 +278,10 @@ def start_sqs_poller():
                             sqs.send_message(QueueUrl=DLQ_URL, MessageBody=body)
                             sqs.delete_message(QueueUrl=SQS_QUEUE_URL, ReceiptHandle=receipt_handle)
                         FAILURE_METRIC.inc()
+                sqs_failures.clear()
             except Exception as e:
+                # allow crashloopbackoff so we don't spam SQS if misconfigured
+                sqs_failures.append(str(e))
                 logger.exception(f"SQS polling loop error: {e}")
                 time.sleep(10)
     t = threading.Thread(target=poll, daemon=True)
