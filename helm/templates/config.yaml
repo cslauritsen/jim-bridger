@@ -10,3 +10,11 @@ data:
   SMTP_PORT: {{ .port | default 25 | quote }}
   SMTP_STARTTLS: {{ .starttls | default false | quote }}
   {{- end }}
+  ENABLE_SQS_POLL: {{ (.Values.sqs).enabled | default false | quote }}
+  {{- with .Values.sqs }}
+  {{- if .enabled }}
+  SQS_QUEUE_URL: {{ required "sqs.queueUrl is required" .queueUrl | quote }}
+  SQS_DLQ_URL: {{ required "sqs.dlqUrl is required" .dlqUrl | quote }}
+  S3_BUCKET_NAME: {{ required "sqs.s3BucketName is required" .s3BucketName | quote }}
+  {{- end }}
+  {{- end }}
