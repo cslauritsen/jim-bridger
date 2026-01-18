@@ -129,3 +129,10 @@ smtp:
   starttls: false
 #  user: 'smtpuser'
 #  password: '**********'
+
+sqs:
+  enabled: false
+  queueUrl: ''
+  dlqUrl: ''
+  region: us-east-2
+  s3BucketName: inmail-planetlauritsen

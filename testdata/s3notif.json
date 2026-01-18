@@ -1,0 +1,38 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-2",
+      "eventTime": "2026-01-18T21:34:02.171Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "AWS:AROART72QUMHIA6QKPXMT:AmazonSES-b829d255-80be-49fb-a2d2-ed46d3d91641"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "10.0.50.174"
+      },
+      "responseElements": {
+        "x-amz-request-id": "A381BHK25XG8H319",
+        "x-amz-id-2": "92I6ISM8s4s7J1bvrX14F1ANhGWee5D17SvJljaAHfoXUWLVfAVy/wv/FGremCoOWywEerS4iUz4DNBwU1ZMlkiZP6feQtc2tGiqkXb1ZCs="
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "tf-s3-queue-20260118213016437900000001",
+        "bucket": {
+          "name": "inmail-planetlauritsen",
+          "ownerIdentity": {
+            "principalId": "A1LS0XX4YC7ECZ"
+          },
+          "arn": "arn:aws:s3:::inmail-planetlauritsen"
+        },
+        "object": {
+          "key": "incoming/2nmv0tmvbj0a4ubaq70vre42du72itdprtgvrgo1",
+          "size": 13914,
+          "eTag": "0569ab15e44ea5a6e487891eea97d184",
+          "sequencer": "00696D51CA20B0EDDE"
+        }
+      }
+    }
+  ]
+}
