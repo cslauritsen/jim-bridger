@@ -43,19 +43,6 @@ spec:
                 name: {{ include "jim-bridger.fullname" . }}
             - configMapRef:
                 name: {{ include "jim-bridger.fullname" . }}
-          env:
-            {{- if .Values.enableSqsPoll }}
-            - name: SQS_QUEUE_URL
-              value: {{ required "sqsQueueUrl is required" .Values.sqsQueueUrl | quote }}
-            - name: SQS_DLQ_URL
-              value: {{ required "sqsDlqUrl is required" .Values.sqsDlqUrl | quote }}
-            - name: S3_BUCKET_NAME
-              value: {{ required "s3BucketName is required" .Values.s3BucketName | quote }}
-              {{- end }}
-            - name: AWS_REGION
-              value: {{ .Values.awsRegion | default "us-east-2" }}
-            - name: ENABLE_SQS_POLL
-              value: {{ .Values.enableSqsPoll | default "true" | quote }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
