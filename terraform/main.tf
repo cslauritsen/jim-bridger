@@ -123,7 +123,8 @@ resource "aws_iam_user_policy" "jim_bridger_policy" {
         Effect = "Allow",
         Action = [
           "s3:GetObject",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "s3:ListBucket"
         ],
         Resource = "${var.s3_bucket_arn}/*"
       },
