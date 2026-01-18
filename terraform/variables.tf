@@ -25,3 +25,9 @@ variable "bridge_secret_arn" {
   type        = string
   default     = "arn:aws:secretsmanager:us-east-2:111657657102:secret:prod/jim-bridger-MXpLCp"
 }
+
+variable "enable_sqs_poll" {
+  description = "Enable SQS polling in the Jim Bridger deployment"
+  type        = bool
+  default     = true
+}
