@@ -90,6 +90,26 @@ def metrics():
     logger.debug('msg=scrape ip=%s ua="%s"', request.remote_addr, request.user_agent)
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
+ALIAS_CONFIG_PATH = os.environ.get('ALIAS_CONFIG_PATH', '/etc/jim-bridger/aliases.json')
+_cached_routing_map = {}
+_last_mtime = 0
+
+def get_live_routing_map():
+    """Reads alias mapping from disk only if file modification time has changed."""
+    global _cached_routing_map, _last_mtime
+    if not os.path.exists(ALIAS_CONFIG_PATH):
+        return _cached_routing_map
+    try:
+        current_mtime = os.path.getmtime(ALIAS_CONFIG_PATH)
+        if current_mtime != _last_mtime:
+            with open(ALIAS_CONFIG_PATH, 'r') as f:
+                _cached_routing_map = json.load(f)
+            _last_mtime = current_mtime
+            logger.info(f"Loaded {len(_cached_routing_map)} dynamic aliases from disk")
+    except Exception as e:
+        logger.error(f"Error accessing or parsing dynamic routing map: {e}")
+    return _cached_routing_map
+
 def process_email_message(parsed_email):
     try:
         original_from = parsed_email.get('From', '')
@@ -108,6 +128,21 @@ def process_email_message(parsed_email):
                 recipients.append(addr)
         if not recipients:
             recipients.append(DEFAULT_RECIPIENT)
+
+        # Evaluate dynamic forward mappings before triggering LMTP connection states
+        routing_map = get_live_routing_map()
+        mapped_recipients = []
+        for r in recipients:
+            norm_r = r.lower()
+            if norm_r in routing_map:
+                rule = routing_map[norm_r]
+                if rule.get("type") == "forward":
+                    logger.info(f"Mapping alias forwarder: {norm_r} -> {rule.get('target')}")
+                    mapped_recipients.append(rule.get("target"))
+                    continue
+            mapped_recipients.append(r)
+        recipients = mapped_recipients
+
         envelope_sender = FORWARDER_ADDRESS
         # Ensure original sender is preserved in headers
         if original_sender:
