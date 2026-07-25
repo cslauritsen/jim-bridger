@@ -66,7 +66,7 @@ HEALTHCHECK_METRIC = Counter('email_bridge_healthcheck', 'Number of health check
 AUTH_FAILED_METRIC = Counter('auth_failure', 'Number of failed authorization attempts')
 SCRAPE_METRIC = Counter('scrapes', 'Number of scrapes')
 
-SMTP_HOST = os.environ.get('SMTP_HOST', 'localhost')
+SMTP_HOST = os.environ.get('SMTP_HOST', 'james')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 25))
 SMTP_POLICY = policy.SMTPUTF8.clone(max_line_length=1024*1024)
 MAIL_SECRET = os.environ['PRE_SHARED_SECRET']
@@ -119,9 +119,10 @@ def process_email_message(parsed_email):
         else:
             parsed_email.replace_header("From", FORWARDER_ADDRESS)
         logger.info(f"Forwarding message: envelope-from={envelope_sender}, recipients={recipients}")
-        start_tls = os.environ.get('SMTP_STARTTLS', 'False').lower() == 'true'
+        # LMTP is typically used on trusted local networks and does not use STARTTLS.
+        start_tls = False
         async def send_email():
-            logger.debug("attempting SMTP forwarding")
+            logger.debug("attempting LMTP forwarding")
             try:
                 await aiosmtplib.send(
                     parsed_email,
@@ -131,9 +132,10 @@ def process_email_message(parsed_email):
                     port=SMTP_PORT,
                     username=os.environ.get('SMTP_USERNAME'),
                     password=os.environ.get('SMTP_PASSWORD'),
+                    use_lmtp=True,
                     start_tls=start_tls,
                 )
-                logger.debug(f"forwarded message via SMTP to {recipients}")
+                logger.debug(f"forwarded message via LMTP to {recipients}")
                 return True, None
             except aiosmtplib.SMTPResponseException as smtp_exc:
                 logger.error(f"SMTP error: {smtp_exc.code} {smtp_exc.message}")
