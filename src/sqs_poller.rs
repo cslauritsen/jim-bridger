@@ -56,7 +56,7 @@ async fn poll_once(
         .queue_url(queue_url)
         .max_number_of_messages(1)
         .wait_time_seconds(config.sqs_poll_wait)
-        .visibility_timeout(60)
+        .visibility_timeout(config.sqs_visibility_timeout)
         .message_attribute_names("All")
         .message_system_attribute_names(aws_sdk_sqs::types::MessageSystemAttributeName::All)
         .send()
@@ -239,6 +239,14 @@ async fn move_to_dlq_if_exhausted(
 /// Parses the raw email, resolves each recipient against the alias routing
 /// map, delivers to Dovecot LDA for `lda` targets, and forwards via SES for
 /// `smtp` targets. Mirrors `process_email_message` in the Python service.
+///
+/// CAUTION (not fixed here, needs a design decision): if delivery to one
+/// target fails after earlier targets in the same message already succeeded
+/// (e.g. LDA delivery to `alice` succeeds, then SES forwarding fails), this
+/// function returns a failure for the *whole* record. The SQS message is
+/// then retried, redelivering to `alice` a second time. Dovecot's `sieve
+/// duplicate` check or an idempotency store keyed on `Message-ID` +
+/// recipient would be needed to make retries safe.
 async fn process_email_message(
     config: &Config,
     routing: &RoutingConfig,
@@ -273,7 +281,13 @@ async fn process_email_message(
                     smtp_recipients.push(rule.target.clone());
                 }
                 other => {
-                    return ProcessOutcome::TransientFailure(format!("Unknown routing rule: {other} for {norm_r}"));
+                    // A bad `type` value is a static configuration error, not
+                    // a transient one; retrying without a human fixing the
+                    // alias JSON will never succeed, so treat it as
+                    // permanent to avoid an infinite redelivery loop.
+                    return ProcessOutcome::PermanentFailure(format!(
+                        "Unknown routing rule: {other} for {norm_r}"
+                    ));
                 }
             }
         }

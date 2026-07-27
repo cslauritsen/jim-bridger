@@ -13,6 +13,12 @@ pub struct Config {
     pub aws_region: String,
     pub sqs_max_retries: u32,
     pub sqs_poll_wait: i32,
+    /// How long a received message is hidden from other consumers while we
+    /// fetch the S3 object and run local/remote delivery. Must comfortably
+    /// exceed worst-case delivery latency (dovecot-lda + SES calls) or the
+    /// message can become visible again mid-processing, triggering a
+    /// concurrent duplicate delivery attempt.
+    pub sqs_visibility_timeout: i32,
     pub enable_sqs_poll: bool,
     pub alias_config_path: String,
     pub default_recipient: String,
@@ -42,6 +48,10 @@ impl Config {
                 .ok()
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(20),
+            sqs_visibility_timeout: env::var("SQS_VISIBILITY_TIMEOUT")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(300),
             enable_sqs_poll: env::var("ENABLE_SQS_POLL")
                 .map(|v| v.to_lowercase() == "true")
                 .unwrap_or(false),
