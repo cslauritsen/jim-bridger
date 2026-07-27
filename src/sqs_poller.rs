@@ -16,14 +16,7 @@ use crate::routing::RoutingConfig;
 /// per the alias routing map, and deletes the S3 object / SQS message on
 /// success. Mirrors `start_sqs_poller` in the original Python service.
 pub async fn run(config: Arc<Config>, routing: Arc<RoutingConfig>) {
-    let Some(queue_url) = config.sqs_queue_url.clone() else {
-        tracing::info!("SQS polling not enabled or missing SQS_QUEUE_URL");
-        return;
-    };
-    if !config.enable_sqs_poll {
-        tracing::info!("SQS polling not enabled or missing SQS_QUEUE_URL");
-        return;
-    }
+    let queue_url = config.sqs_queue_url.clone();
 
     let aws_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
         .region(aws_config::Region::new(config.aws_region.clone()))
@@ -125,8 +118,7 @@ async fn process_sqs_message(
             .get("bucket")
             .and_then(|b| b.get("name"))
             .and_then(|n| n.as_str())
-            .map(|s| s.to_string())
-            .or_else(|| config.s3_bucket_name.clone());
+            .map(|s| s.to_string());
         let s3_key = s3_info
             .get("object")
             .and_then(|o| o.get("key"))
@@ -225,11 +217,15 @@ async fn move_to_dlq_if_exhausted(
     body: &str,
     retry_count: u32,
 ) {
-    if retry_count >= config.sqs_max_retries
-        && let Some(dlq_url) = &config.sqs_dlq_url
-    {
+    if retry_count >= config.sqs_max_retries {
         tracing::warn!("Moving message to DLQ after {retry_count} attempts");
-        if let Err(e) = sqs.send_message().queue_url(dlq_url).message_body(body).send().await {
+        if let Err(e) = sqs
+            .send_message()
+            .queue_url(config.sqs_dlq_url.as_str())
+            .message_body(body)
+            .send()
+            .await
+        {
             tracing::error!("Failed to send message to DLQ: {e}");
         }
         delete_message(sqs, queue_url, receipt_handle).await;
@@ -272,7 +268,7 @@ async fn process_email_message(
             match rule.target_type.as_str() {
                 "lda" => {
                     tracing::info!("local delivery {norm_r} -> {}", rule.target);
-                    if let Err(e) = lda::deliver_to_dovecot(raw_email, &rule.target).await {
+                    if let Err(e) = lda::deliver_to_dovecot(raw_email, &rule.target, &config.lda_path).await {
                         return ProcessOutcome::TransientFailure(format!("Error processing email: {e}"));
                     }
                 }
