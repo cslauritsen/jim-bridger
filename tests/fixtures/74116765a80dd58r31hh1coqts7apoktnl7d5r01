@@ -1,0 +1,290 @@
+Return-Path: <>
+Received: from ma.rivc-pulkovo.ru (ma.rivc-pulkovo.ru [84.17.23.164])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id 74116765a80dd58r31hh1coqts7apoktnl7d5r01
+ for noc@planetlauritsen.com;
+ Sat, 13 Jun 2026 15:57:52 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: none (spfCheck: 84.17.23.164 is neither permitted nor denied by domain of ma.rivc-pulkovo.ru) client-ip=84.17.23.164; envelope-from=postmaster@ma.rivc-pulkovo.ru; helo=ma.rivc-pulkovo.ru;
+Authentication-Results: amazonses.com;
+ spf=none (spfCheck: 84.17.23.164 is neither permitted nor denied by domain of ma.rivc-pulkovo.ru) client-ip=84.17.23.164; envelope-from=postmaster@ma.rivc-pulkovo.ru; helo=ma.rivc-pulkovo.ru;
+ dmarc=permerror;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFIQmNGZHZRSEdwWmlGNk5wTGJJMDA1QzIxZWhLL1FiUXdTK0UzZ2tINGtsbC90WlJlZmNQVE0zWnFQMmMwOVhOWTYvdTBGWWhtby9lVEZlWXArelVrOEhHem9Jamo0WEhzZzc2bWxEdG9xNm5pSkVrbHVpWUo2aEc5bGo3K0JlU2RIczhEQzZCM3BPczZFRGo1MVN0SDNoSDZDdUkzRjkzMmUxeUJpa1ZkMkFaNU0xUis0WFJWUkc4TmwyZTNFTW82T1g3TTJJU0lCR3IrUDgyQ0RtckplSFAzTlcwR2N4SU8zbHJSZXBYdWlaMEhaaGtEazYvRGEreWdxQUpibEp0ajN2N3hnZVRoc3VQK1RHVis4NkRLUA==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=VGBR+uzbYIYRb3ANcGqKrz6VwuI9if9cUUCxEBQLa9svEuBO5zXsxzGi8xR6EuO8yDAAmHU6jjuccNuY9yd+Wd1JoFClbI2inHND4XHH/P5iWERKmpvlVatwI3akq/0REEMvMlt3Ki3fs7gFcXU3S9Px0AMIkxCsgm+7fSS7Gl0=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1781366272; v=1; bh=oraR4yt8uOsPDWgmUPCwTmy60N4fMwu8PX1MVWovnz8=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: from [103.210.238.154] (103.210.238.154) by srvr015.rivc.local
+ (192.168.178.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.7; Sat, 13 Jun
+ 2026 18:57:36 +0300
+Content-Type: multipart/alternative; boundary="===============0021692279=="
+MIME-Version: 1.0
+Subject: GOOD NEWS ==== URGENT
+To: ME
+From: Paul Forster
+Date: Sat, 13 Jun 2026 23:57:21 +0800
+Reply-To: <p.forster@dreamsdesign.ca>
+Message-ID: <be92def8-486e-4742-92c9-3fb6e4d412b3@srvr015.rivc.local>
+Return-Path: <>
+X-Originating-IP: [103.210.238.154]
+X-ClientProxiedBy: srvr015.rivc.local (192.168.178.15) To srvr015.rivc.local
+ (192.168.178.15)
+
+--===============0021692279==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+
+ Good day, I am Paul Forster Director In Charge  Global loss recovery team.
+ =
+
+ I would like to discuss and guide you on how to receive your compensation =
+without any upfront fee as long as you have proof i.e receipts of emails, b=
+ank payment copies etc.. =
+
+ =
+
+ We use specialized tools to trace transactions and identify fraudsters. We=
+ are also collaborating with the Trump administration Team in disbursement =
+ of payment. Once we can verify your claims of online scam, we shall procee=
+d with your compensation immediately.
+ =
+
+ Please contact me via email for details. =
+
+ =
+
+ p.forster@dreamsdesign.ca
+    =
+
+ =
+
+ Paul Forster
+ Director In Charge
+ Global loss recovery team
+=20
+--===============0021692279==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.=
+w3.org/TR/html4/loose.dtd">
+<html>
+<head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8"/><script bis_use=3D"true" charset=3D"utf-8" data-bis-config=3D"{&quot;b=
+lacklistIframeSrc&quot;:[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;=
+,&quot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.=
+vk.com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&qu=
+ot;//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.goog=
+le.com/recaptcha/api2/&quot;,&quot;//www.google.com/recaptcha/enterprise/an=
+chor&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;//www.google.co=
+m/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com=
+/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;/=
+/disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;=
+,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot=
+;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google=
+.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&=
+quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://&quot;,&quot;/a=
+uth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclarity.com&quot;,&q=
+uot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&=
+quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.go=
+ogle.com/shopping/customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;=
+gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com=
+&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot;,&quot;mail.go=
+ogle.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&qu=
+ot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&=
+quot;,&quot;1plus1.video&quot;,&quot;console.googletagservices.com&quot;,&q=
+uot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.pr=
+otechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;,&quot;ogs.google.=
+com&quot;,&quot;//www.ukrnafta.com/data/map/&quot;,&quot;//maps.google.com/=
+maps&quot;,&quot;//www.openstreetmap.org/export/embed.html&quot;,&quot;//ww=
+w.google.com/maps/d/u/3/embed&quot;,&quot;//itm.ebaydesc.com/itmdesc&quot;,=
+&quot;//books.google.com/books&quot;,&quot;//embed.podcasts.apple.com&quot;=
+,&quot;//www.paypal.com/smartchat&quot;,&quot;//www.centurylink.com/assets/=
+includes/common/sfChatiFrame.html&quot;,&quot;//macmillan-prod-gen.ada.supp=
+ort/embed&quot;,&quot;//macmillan-prod-gen.ada.support/chat&quot;,&quot;//c=
+tl-consumer.my.site.com/&quot;],&quot;whitelistDomainsForPostBody&quot;:[&q=
+uot;youtube.com&quot;]}" data-dynamic-id=3D"ee698a6a-6c50-44d6-82b4-8087d97=
+cc07c" src=3D"chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/executors=
+/200.js" type=3D"text/javascript"></script><script bis_use=3D"true" charset=
+=3D"utf-8" data-bis-config=3D"{&quot;blacklistIframeSrc&quot;:[&quot;facebo=
+ok.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&qu=
+ot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quo=
+t;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www=
+.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//=
+www.google.com/recaptcha/enterprise/anchor&quot;,&quot;//hangouts.google.co=
+m/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//www.google.=
+com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&=
+quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.c=
+om/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&quot;,&quot=
+;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,&quot;blog=
+ger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.google.com/&=
+quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension://&quot;,&q=
+uot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytics.google.c=
+om/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quot;,&quot;h=
+captcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;=
+accounts.google.com&quot;,&quot;www.google.com/shopping/customerreviews&quo=
+t;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebay=
+static.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.google.com&quot=
+;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.google.com&=
+quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fb=
+cdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;=
+console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//=
+radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;challenges.c=
+loudflare.com/&quot;,&quot;ogs.google.com&quot;,&quot;//www.ukrnafta.com/da=
+ta/map/&quot;,&quot;//maps.google.com/maps&quot;,&quot;//www.openstreetmap.=
+org/export/embed.html&quot;,&quot;//www.google.com/maps/d/u/3/embed&quot;,&=
+quot;//itm.ebaydesc.com/itmdesc&quot;,&quot;//books.google.com/books&quot;,=
+&quot;//embed.podcasts.apple.com&quot;,&quot;//www.paypal.com/smartchat&quo=
+t;,&quot;//www.centurylink.com/assets/includes/common/sfChatiFrame.html&quo=
+t;,&quot;//macmillan-prod-gen.ada.support/embed&quot;,&quot;//macmillan-pro=
+d-gen.ada.support/chat&quot;,&quot;//ctl-consumer.my.site.com/&quot;],&quot=
+;whitelistDomainsForPostBody&quot;:[&quot;youtube.com&quot;]}" data-dynamic=
+-id=3D"ee698a6a-6c50-44d6-82b4-8087d97cc07c" src=3D"chrome-extension://eppi=
+ocemhmnlbhjplcgkofciiegomcon/executors/200.js" type=3D"text/javascript"></s=
+cript>
+	<title></title>
+	<script bis_use=3D"true" charset=3D"utf-8" data-bis-config=3D"[&quot;faceb=
+ook.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&q=
+uot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&qu=
+ot;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//ww=
+w.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;/=
+/hangouts.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,=
+&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soun=
+dcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;=
+,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2fol=
+low.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.ne=
+t/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;=
+//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-ex=
+tension://&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;/=
+/analytics.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/che=
+ckout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captc=
+ha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/=
+customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,=
+&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;conta=
+cts.google.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&qu=
+ot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;=
+,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1=
+.video&quot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.=
+net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;=
+,&quot;challenges.cloudflare.com/&quot;,&quot;ogs.google.com&quot;]" src=3D=
+"chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/executors/traffic.js" =
+type=3D"text/javascript"></script><script bis_use=3D"true" charset=3D"utf-8=
+" data-bis-config=3D"[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;,&q=
+uot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.vk.=
+com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&quot;=
+//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.google.=
+com/recaptcha/api2/&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;=
+//www.google.com/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&q=
+uot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com=
+/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.dr=
+iftt.com/&quot;,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;lo=
+gin&quot;,&quot;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//s=
+martlock.google.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolsto=
+ycomments.com/&quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://=
+&quot;,&quot;/auth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclari=
+ty.com&quot;,&quot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot=
+;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quo=
+t;,&quot;www.google.com/shopping/customerreviews&quot;,&quot;buy.tinypass.c=
+om&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;=
+docs.google.com&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot=
+;,&quot;mail.google.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xplee=
+r.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas=
+.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;console.googletagservic=
+es.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot=
+;,&quot;//li.protechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;,&q=
+uot;ogs.google.com&quot;]" src=3D"chrome-extension://eppiocemhmnlbhjplcgkof=
+ciiegomcon/executors/traffic.js" type=3D"text/javascript"></script><script =
+bis_use=3D"true" charset=3D"utf-8" data-bis-config=3D"[&quot;facebook.com/&=
+quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&quot;,&quo=
+t;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quot;,&quot=
+;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www.instagr=
+am.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//hangouts=
+.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//w=
+ww.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.co=
+m/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//=
+tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&q=
+uot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,=
+&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.go=
+ogle.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension:/=
+/&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytic=
+s.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quo=
+t;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&qu=
+ot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/customerr=
+eviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;sec=
+ureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.googl=
+e.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.g=
+oogle.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;st=
+atic.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&qu=
+ot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot=
+;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;ch=
+allenges.cloudflare.com/&quot;,&quot;ogs.google.com&quot;]" src=3D"chrome-e=
+xtension://eppiocemhmnlbhjplcgkofciiegomcon/executors/traffic.js" type=3D"t=
+ext/javascript"></script>
+	<script bis_use=3D"true" charset=3D"utf-8" data-dynamic-id=3D"4997a25f-b47=
+9-4fe2-b741-8d0f24593e27" nonce=3D"" src=3D"chrome-extension://eppiocemhmnl=
+bhjplcgkofciiegomcon/executors/200.js" type=3D"text/javascript"></script>
+</head>
+<body bis_frame_id=3D"37936" bis_status=3D"ok">
+<p data-olk-copy-source=3D"MessageBody" style=3D"color: rgb(36, 36, 36); fo=
+nt-family: &quot;Segoe UI&quot;, &quot;Segoe UI Web (West European)&quot;, =
+-apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans=
+-serif; font-size: 15px; background-color: rgb(255, 255, 255);"><span style=
+=3D"font-size: 13px; background-color: rgb(255, 255, 255); color: rgb(44, 5=
+4, 58); font-family: monospace;">Good day, I am Paul Forster&nbsp;Director =
+In Charge &nbsp;Global loss recovery team.</span><br style=3D"font-size: 13=
+px; background-color: rgb(255, 255, 255); box-sizing: border-box; color: rg=
+b(44, 54, 58); font-family: monospace;" />
+<br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-siz=
+ing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">I would like to discuss and gui=
+de you on how to receive your compensation without any upfront fee as long =
+as you have proof i.e receipts of emails, bank payment copies etc..&nbsp;</=
+span><br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); bo=
+x-sizing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+<br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-siz=
+ing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">We use specialized tools to tra=
+ce transactions and identify fraudsters. We are also collaborating with the=
+ Trump administration Team in disbursement &nbsp;of payment. Once we can ve=
+rify your claims of online scam, we shall proceed with your compensation im=
+mediately.</span><br style=3D"font-size: 13px; background-color: rgb(255, 2=
+55, 255); box-sizing: border-box; color: rgb(44, 54, 58); font-family: mono=
+space;" />
+<br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-siz=
+ing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">Please contact me via email for=
+ details.&nbsp;</span><br style=3D"font-size: 13px; background-color: rgb(2=
+55, 255, 255); box-sizing: border-box; color: rgb(44, 54, 58); font-family:=
+ monospace;" />
+<br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-siz=
+ing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+p.forster@dreamsdesign.ca<br style=3D"font-size: 13px; background-color: rg=
+b(255, 255, 255); box-sizing: border-box; color: rgb(44, 54, 58); font-fami=
+ly: monospace;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">&nbsp;&nbsp;</span><span style=
+=3D"font-size: 13px; background-color: rgb(255, 255, 255); color: rgb(44, 5=
+4, 58); font-family: monospace;">&nbsp;</span><br style=3D"font-size: 13px;=
+ background-color: rgb(255, 255, 255); box-sizing: border-box; color: rgb(4=
+4, 54, 58); font-family: monospace;" />
+<br style=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-siz=
+ing: border-box; color: rgb(44, 54, 58); font-family: monospace;" />
+Paul Forster<br style=3D"font-size: 13px; background-color: rgb(255, 255, 2=
+55); box-sizing: border-box; color: rgb(44, 54, 58); font-family: monospace=
+;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">Director In Charge</span><br st=
+yle=3D"font-size: 13px; background-color: rgb(255, 255, 255); box-sizing: b=
+order-box; color: rgb(44, 54, 58); font-family: monospace;" />
+<span style=3D"font-size: 13px; background-color: rgb(255, 255, 255); color=
+: rgb(44, 54, 58); font-family: monospace;">Global loss recovery team</span=
+></p>
+</body>
+</html>
+
+--===============0021692279==--

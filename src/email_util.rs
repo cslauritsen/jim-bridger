@@ -252,3 +252,89 @@ Body text.\r\n";
         assert!(text.contains("From: forwarder@example.com\r\n"));
     }
 }
+
+#[cfg(test)]
+mod real_sample_tests {
+    use super::*;
+
+    fn fixture(name: &str) -> Vec<u8> {
+        let path = format!("{}/tests/fixtures/{name}", env!("CARGO_MANIFEST_DIR"));
+        std::fs::read(&path).unwrap_or_else(|e| panic!("failed to read fixture {name}: {e}"))
+    }
+
+    /// Real inbound spam with `To: undisclosed-recipients:;` (an address
+    /// group with no members) and no usable `From` address — should not
+    /// panic, and should fall back to the default recipient since there are
+    /// no concrete addresses to route on.
+    #[test]
+    fn undisclosed_recipients_group_falls_back_to_default() {
+        let raw = fixture("34hkfr3mrk2pgrbvmcqlbi3d0vj4bekh6d9cts01");
+        let msg = parse_message(&raw).expect("should parse malformed real-world message");
+        assert_eq!(extract_recipients(&msg, "csl"), vec!["csl"]);
+        assert_eq!(original_sender(&msg), None);
+    }
+
+    /// Real inbound spam with non-RFC5322 `To: ME` / `From: Paul Forster`
+    /// (no `@`, no angle brackets) — must not panic and must fall back to
+    /// the default recipient.
+    #[test]
+    fn non_rfc_addresses_fall_back_to_default() {
+        let raw = fixture("74116765a80dd58r31hh1coqts7apoktnl7d5r01");
+        let msg = parse_message(&raw).expect("should parse malformed real-world message");
+        assert_eq!(extract_recipients(&msg, "csl"), vec!["csl"]);
+        assert_eq!(original_sender(&msg), None);
+    }
+
+    /// Real message carrying an `X-Forwarded-To` header alongside a
+    /// different `To` address — `X-Forwarded-To` must take precedence, and
+    /// the original sender must still be extracted from `From`.
+    #[test]
+    fn x_forwarded_to_takes_precedence_on_real_message() {
+        let raw = fixture("atq3c8qh13hbclfkcnckqg329imgus5bcqlje281");
+        let msg = parse_message(&raw).expect("should parse real message");
+        assert_eq!(extract_recipients(&msg, "csl"), vec!["chad@planetlauritsen.com"]);
+        assert_eq!(original_sender(&msg).as_deref(), Some("noreply@civicplus.com"));
+    }
+
+    /// Plain real message with a single `To` address and normal `From`.
+    #[test]
+    fn plain_message_extracts_to_and_sender() {
+        let raw = fixture("s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1");
+        let msg = parse_message(&raw).expect("should parse real message");
+        assert_eq!(extract_recipients(&msg, "csl"), vec!["sherlink@planetlauritsen.com"]);
+        assert_eq!(original_sender(&msg).as_deref(), Some("google-noreply@google.com"));
+    }
+
+    /// Ensures the header-rewrite pass round-trips real, large,
+    /// multi-part/MIME messages without corrupting the body: byte length
+    /// changes should be limited to the header block, and the body bytes
+    /// must be preserved exactly.
+    #[test]
+    fn rewrite_preserves_body_on_all_real_fixtures() {
+        let names = [
+            "0sl4ra9q4belnr5gde9gn0s4gliceo7gulachtg1",
+            "34hkfr3mrk2pgrbvmcqlbi3d0vj4bekh6d9cts01",
+            "74116765a80dd58r31hh1coqts7apoktnl7d5r01",
+            "7epml1jp15oj8nv8qo07iofas00q7ui6npkf9ig1",
+            "atq3c8qh13hbclfkcnckqg329imgus5bcqlje281",
+            "b3r55m93n3mckvhelfitk6k3ts7aqf36q3j7kh01",
+            "eb6emvij2fj9vjh8lfmbo3vbaep130653qqii5o1",
+            "pme2o3jsue7lc37h7b56jj703ft5jom21hfc5v01",
+            "s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1",
+        ];
+        for name in names {
+            let raw = fixture(name);
+            let msg = parse_message(&raw).unwrap_or_else(|| panic!("failed to parse {name}"));
+            let sender = original_sender(&msg);
+            let rewritten = rewrite_sender_headers(&raw, sender.as_deref(), "ses-forwarder@planetlauritsen.com");
+
+            let original_body = split_header_block(&raw).map(|(_, _, body)| body);
+            let rewritten_body = split_header_block(&rewritten).map(|(_, _, body)| body);
+            assert_eq!(
+                original_body, rewritten_body,
+                "body bytes must be unchanged for {name}"
+            );
+        }
+    }
+}
+
