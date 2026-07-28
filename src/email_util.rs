@@ -73,6 +73,10 @@ pub fn rewrite_sender_headers(raw: &[u8], sender: Option<&SenderInfo>, forwarder
     let from_value = build_from_value(sender, forwarder_address);
     set_header(&mut lines, "From", &from_value);
 
+    // SES also checks the Sender header if present. Strip it so SES only sees
+    // the rewritten From address.
+    remove_header(&mut lines, "Sender");
+
     // Set Reply-To to the original sender's email so replies reach them,
     // but only if the message doesn't already have its own Reply-To.
     if let Some(s) = sender {
@@ -177,6 +181,12 @@ fn split_keep_ending(text: &str) -> Vec<&str> {
 fn has_header(lines: &[String], name: &str) -> bool {
     let prefix = format!("{name}:");
     lines.iter().any(|l| l.len() >= prefix.len() && l[..prefix.len()].eq_ignore_ascii_case(&prefix))
+}
+
+/// Removes all header lines matching `name` (case-insensitive).
+fn remove_header(lines: &mut Vec<String>, name: &str) {
+    let prefix = format!("{name}:");
+    lines.retain(|l| l.len() < prefix.len() || !l[..prefix.len()].eq_ignore_ascii_case(&prefix));
 }
 
 /// Replaces the first header line matching `name` (case-insensitive) with
