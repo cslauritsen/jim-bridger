@@ -43,8 +43,21 @@ pub async fn forward_via_ses(
             Ok(())
         }
         Err(err) => {
-            let msg = err.to_string();
-            Err(match err.into_service_error() {
+            // Handle non-service errors (network, timeout, dispatch) before
+            // calling into_service_error(), which panics on those variants.
+            let service_err = match err {
+                aws_sdk_sesv2::error::SdkError::ServiceError(se) => se.into_err(),
+                aws_sdk_sesv2::error::SdkError::TimeoutError(e) => {
+                    return Err(ProcessOutcome::TransientFailure(format!("SES request timed out: {e:?}")));
+                }
+                aws_sdk_sesv2::error::SdkError::DispatchFailure(e) => {
+                    return Err(ProcessOutcome::TransientFailure(format!("SES dispatch failure: {e:?}")));
+                }
+                e => {
+                    return Err(ProcessOutcome::TransientFailure(format!("SES request failed: {e}")));
+                }
+            };
+            Err(match service_err {
                 SendEmailError::MessageRejected(e) => {
                     ProcessOutcome::PermanentFailure(format!("Message rejected by SES: {e}"))
                 }
@@ -69,7 +82,7 @@ pub async fn forward_via_ses(
                 SendEmailError::NotFoundException(e) => {
                     ProcessOutcome::TransientFailure(format!("SES resource not found: {e}"))
                 }
-                _ => ProcessOutcome::TransientFailure(format!("Unexpected SES error: {msg}")),
+                e => ProcessOutcome::TransientFailure(format!("Unexpected SES error: {e}")),
             })
         }
     }
