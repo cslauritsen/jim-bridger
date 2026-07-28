@@ -23,11 +23,19 @@ pub async fn run(config: Arc<Config>, routing: Arc<RoutingConfig>) {
         .load()
         .await;
 
+    let ses_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
+        .region(aws_config::Region::new(config.ses_region.clone()))
+        .load()
+        .await;
+
     let sqs = SqsClient::new(&aws_config);
     let s3 = S3Client::new(&aws_config);
-    let sesc = SesClient::new(&aws_config);
+    let sesc = SesClient::new(&ses_config);
 
-    tracing::info!("Starting SQS polling loop");
+    tracing::info!(
+        "Starting SQS polling loop (SQS/S3 region={}, SES region={})",
+        config.aws_region, config.ses_region
+    );
     loop {
         if let Err(e) = poll_once(&config, &routing, &sqs, &s3, &sesc, &queue_url).await {
             tracing::error!("SQS polling loop error: {e}");

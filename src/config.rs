@@ -5,7 +5,12 @@ use std::env;
 pub struct Config {
     pub sqs_queue_url: String,
     pub sqs_dlq_url: String,
+    /// Region for SQS and S3 (where the queue and inbound email bucket live).
     pub aws_region: String,
+    /// Region for SES sending. SES identities are region-specific and may be
+    /// in a different region than SQS/S3 (e.g. us-east-1 for SES,
+    /// us-east-2 for SQS/S3).
+    pub ses_region: String,
     pub sqs_max_retries: u32,
     pub sqs_poll_wait: i32,
     /// How long a received message is hidden from other consumers while we
@@ -28,7 +33,8 @@ impl Config {
                 .expect("SQS_QUEUE_URL environment variable must be set"),
             sqs_dlq_url: env::var("SQS_DLQ_URL")
                 .expect("SQS_DLQ_URL environment variable must be set"),
-            aws_region: env::var("AWS_REGION").unwrap_or_else(|_| "us-east-1".to_string()),
+            aws_region: env::var("AWS_REGION").unwrap_or_else(|_| "us-east-2".to_string()),
+            ses_region: env::var("SES_REGION").unwrap_or_else(|_| "us-east-1".to_string()),
             sqs_max_retries: env::var("SQS_MAX_RETRIES")
                 .ok()
                 .and_then(|v| v.parse().ok())
