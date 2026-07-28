@@ -62,10 +62,11 @@ pub fn rewrite_sender_headers(raw: &[u8], original_sender: Option<&str>, forward
 
     // SES requires the From address to be a verified identity/domain.
     // Always rewrite From to the forwarder address so it passes SES verification,
-    // and preserve the original sender in Reply-To so replies still reach them.
+    // and preserve the original sender in Reply-To so replies still reach them —
+    // but only if the message doesn't already carry its own Reply-To.
     set_header(&mut lines, "From", forwarder_address);
     if let Some(sender) = original_sender {
-        if !sender.is_empty() {
+        if !sender.is_empty() && !has_header(&lines, "Reply-To") {
             set_header(&mut lines, "Reply-To", sender);
         }
     }
@@ -137,6 +138,12 @@ fn split_keep_ending(text: &str) -> Vec<&str> {
         result.push(&text[start..]);
     }
     result
+}
+
+/// Returns true if any header line matching `name` (case-insensitive) is present.
+fn has_header(lines: &[String], name: &str) -> bool {
+    let prefix = format!("{name}:");
+    lines.iter().any(|l| l.len() >= prefix.len() && l[..prefix.len()].eq_ignore_ascii_case(&prefix))
 }
 
 /// Replaces the first header line matching `name` (case-insensitive) with
@@ -233,8 +240,8 @@ Body text.\r\n";
         let rewritten = rewrite_sender_headers(SAMPLE_WITH_REPLY_TO, Some("alice@example.com"), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
         assert!(text.contains("From: forwarder@example.com\r\n"));
-        assert!(text.contains("Reply-To: alice@example.com\r\n"));
-        assert!(!text.contains("old@example.com"));
+        // Existing Reply-To is preserved; original sender is NOT injected over it.
+        assert!(text.contains("Reply-To: old@example.com\r\n"));
         assert!(text.ends_with("Body text.\r\n"));
     }
 
