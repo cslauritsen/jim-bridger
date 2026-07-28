@@ -28,7 +28,7 @@ impl Config {
                 .expect("SQS_QUEUE_URL environment variable must be set"),
             sqs_dlq_url: env::var("SQS_DLQ_URL")
                 .expect("SQS_DLQ_URL environment variable must be set"),
-            aws_region: env::var("AWS_REGION").unwrap_or_else(|_| "us-east-2".to_string()),
+            aws_region: env::var("AWS_REGION").unwrap_or_else(|_| "us-east-1".to_string()),
             sqs_max_retries: env::var("SQS_MAX_RETRIES")
                 .ok()
                 .and_then(|v| v.parse().ok())
