@@ -15,6 +15,8 @@ async fn main() {
         .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"));
     tracing_subscriber::fmt().with_env_filter(filter).compact().init();
 
+    tracing::info!("jim_bridger {}", env!("GIT_DESCRIBE"));
+
     let config = Arc::new(Config::from_env());
     let routing = Arc::new(RoutingConfig::new(&config.alias_config_path));
 
