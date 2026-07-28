@@ -158,7 +158,7 @@ async fn process_sqs_message(
                         // Don't delete the S3 object — leave it for manual inspection.
                         // Don't retry — a corrupt message will never parse. Go straight to DLQ
                         // and delete the original SQS message.
-                        move_to_dlq(config, sqs, queue_url, &body).await;
+                        move_to_dlq(config, sqs, &body).await;
                         delete_message(sqs, queue_url, &receipt_handle).await;
                     }
                     ProcessOutcome::PermanentFailure(err) => {
@@ -218,7 +218,7 @@ async fn delete_message(sqs: &SqsClient, queue_url: &str, receipt_handle: &str) 
     }
 }
 
-async fn move_to_dlq(config: &Config, sqs: &SqsClient, queue_url: &str, body: &str) {
+async fn move_to_dlq(config: &Config, sqs: &SqsClient, body: &str) {
     if let Err(e) = sqs
         .send_message()
         .queue_url(config.sqs_dlq_url.as_str())
@@ -240,7 +240,7 @@ async fn move_to_dlq_if_exhausted(
 ) {
     if retry_count >= config.sqs_max_retries {
         tracing::warn!("Moving message to DLQ after {retry_count} attempts");
-        move_to_dlq(config, sqs, queue_url, body).await;
+        move_to_dlq(config, sqs, body).await;
         delete_message(sqs, queue_url, receipt_handle).await;
     }
 }
