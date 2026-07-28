@@ -307,7 +307,7 @@ async fn process_email_message(
     }
 
     if !smtp_recipients.is_empty() {
-        let rewritten = email_util::rewrite_sender_headers(raw_email, sender.as_deref(), &config.forwarder_address);
+        let rewritten = email_util::rewrite_sender_headers(raw_email, sender.as_ref(), &config.forwarder_address);
         if let Err(outcome) = ses::forward_via_ses(sesc, rewritten, &config.forwarder_address, &smtp_recipients).await
         {
             return outcome;

@@ -31,9 +31,19 @@ pub fn extract_recipients(msg: &Message, default_recipient: &str) -> Vec<String>
     recipients
 }
 
-/// Returns the bare email address from the message's `From` header, if any.
-pub fn original_sender(msg: &Message) -> Option<String> {
-    msg.from()?.first()?.address().map(|s| s.to_string())
+/// The display name and email address extracted from a message's `From` header.
+#[derive(Debug, PartialEq)]
+pub struct SenderInfo {
+    pub name: Option<String>,
+    pub email: String,
+}
+
+/// Returns the sender's display name and email address from the `From` header, if any.
+pub fn original_sender(msg: &Message) -> Option<SenderInfo> {
+    let addr = msg.from()?.first()?;
+    let email = addr.address()?.to_string();
+    let name = addr.name().map(|s| s.to_string());
+    Some(SenderInfo { name, email })
 }
 
 /// Parses raw email bytes using the same permissive policy behavior as the
@@ -42,16 +52,14 @@ pub fn parse_message(raw: &[u8]) -> Option<Message<'_>> {
     MessageParser::default().parse(raw)
 }
 
-/// Rewrites the raw message's header block so that:
-/// - if the original message had a non-empty `From` address, the `From`
-///   header is left untouched and `Reply-To` is set/replaced with that
-///   original sender address (so replies go back to the real sender);
-/// - otherwise, the `From` header is replaced with `forwarder_address`.
+/// Rewrites the raw message's header block for SES forwarding:
+/// - `From` is always set to `"Sender Name (via domain) <forwarder_address>"` so
+///   SES sees a verified sending identity while the original sender remains visible.
+/// - `Reply-To` is set to the original sender's email address if the message
+///   doesn't already carry one, so replies reach the real sender.
 ///
-/// This mirrors the header manipulation performed before SMTP-forwarding in
-/// the Python implementation. The body and all other headers are preserved
-/// byte-for-byte.
-pub fn rewrite_sender_headers(raw: &[u8], original_sender: Option<&str>, forwarder_address: &str) -> Vec<u8> {
+/// The body and all other headers are preserved byte-for-byte.
+pub fn rewrite_sender_headers(raw: &[u8], sender: Option<&SenderInfo>, forwarder_address: &str) -> Vec<u8> {
     let (header_block, sep, body) = match split_header_block(raw) {
         Some(parts) => parts,
         None => return raw.to_vec(),
@@ -60,14 +68,16 @@ pub fn rewrite_sender_headers(raw: &[u8], original_sender: Option<&str>, forward
     let header_text = String::from_utf8_lossy(header_block);
     let mut lines = fold_header_lines(&header_text);
 
-    // SES requires the From address to be a verified identity/domain.
-    // Always rewrite From to the forwarder address so it passes SES verification,
-    // and preserve the original sender in Reply-To so replies still reach them —
-    // but only if the message doesn't already carry its own Reply-To.
-    set_header(&mut lines, "From", forwarder_address);
-    if let Some(sender) = original_sender {
-        if !sender.is_empty() && !has_header(&lines, "Reply-To") {
-            set_header(&mut lines, "Reply-To", sender);
+    // Build a From value that shows the original sender's identity while using
+    // the verified forwarder address as the actual mailbox SES will send from.
+    let from_value = build_from_value(sender, forwarder_address);
+    set_header(&mut lines, "From", &from_value);
+
+    // Set Reply-To to the original sender's email so replies reach them,
+    // but only if the message doesn't already have its own Reply-To.
+    if let Some(s) = sender {
+        if !has_header(&lines, "Reply-To") {
+            set_header(&mut lines, "Reply-To", &s.email);
         }
     }
 
@@ -78,6 +88,29 @@ pub fn rewrite_sender_headers(raw: &[u8], original_sender: Option<&str>, forward
     result.extend_from_slice(sep);
     result.extend_from_slice(body);
     result
+}
+
+/// Builds the `From` header value, incorporating the original sender's name/address
+/// so the recipient can see who originally sent the message.
+///
+/// Examples:
+/// - name + email  → `"Chad Lauritsen (via example.com)" <forwarder@example.com>`
+/// - email only    → `"chad@other.com (via example.com)" <forwarder@example.com>`
+/// - no sender     → `forwarder@example.com`
+fn build_from_value(sender: Option<&SenderInfo>, forwarder_address: &str) -> String {
+    let via_domain = forwarder_address
+        .rsplit_once('@')
+        .map(|(_, domain)| domain)
+        .unwrap_or(forwarder_address);
+
+    match sender {
+        None => forwarder_address.to_string(),
+        Some(s) => {
+            let label = s.name.as_deref().unwrap_or(&s.email);
+            // Parentheses in display names require RFC 5322 quoting.
+            format!("\"{label} (via {via_domain})\" <{forwarder_address}>")
+        }
+    }
 }
 
 /// Splits raw message bytes into (header_block, separator, body), where the
@@ -232,14 +265,18 @@ Body text.\r\n";
     #[test]
     fn extracts_original_sender() {
         let msg = parse_message(SAMPLE_TO_CC).unwrap();
-        assert_eq!(original_sender(&msg).as_deref(), Some("alice@example.com"));
+        let s = original_sender(&msg).unwrap();
+        assert_eq!(s.email, "alice@example.com");
+        assert_eq!(s.name.as_deref(), Some("Alice"));
     }
 
     #[test]
-    fn rewrites_from_and_reply_to_when_sender_present() {
-        let rewritten = rewrite_sender_headers(SAMPLE_WITH_REPLY_TO, Some("alice@example.com"), "forwarder@example.com");
+    fn rewrites_from_with_display_name_and_preserves_existing_reply_to() {
+        let msg = parse_message(SAMPLE_WITH_REPLY_TO).unwrap();
+        let sender = original_sender(&msg);
+        let rewritten = rewrite_sender_headers(SAMPLE_WITH_REPLY_TO, sender.as_ref(), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
-        assert!(text.contains("From: forwarder@example.com\r\n"));
+        assert!(text.contains("\"Alice (via example.com)\" <forwarder@example.com>"));
         // Existing Reply-To is preserved; original sender is NOT injected over it.
         assert!(text.contains("Reply-To: old@example.com\r\n"));
         assert!(text.ends_with("Body text.\r\n"));
@@ -247,9 +284,11 @@ Body text.\r\n";
 
     #[test]
     fn inserts_reply_to_when_missing() {
-        let rewritten = rewrite_sender_headers(SAMPLE_TO_CC, Some("alice@example.com"), "forwarder@example.com");
+        let msg = parse_message(SAMPLE_TO_CC).unwrap();
+        let sender = original_sender(&msg);
+        let rewritten = rewrite_sender_headers(SAMPLE_TO_CC, sender.as_ref(), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
-        assert!(text.contains("From: forwarder@example.com\r\n"));
+        assert!(text.contains("\"Alice (via example.com)\" <forwarder@example.com>"));
         assert!(text.contains("Reply-To: alice@example.com\r\n"));
     }
 
@@ -291,7 +330,7 @@ mod real_sample_tests {
         let raw = fixture("74116765a80dd58r31hh1coqts7apoktnl7d5r01");
         let msg = parse_message(&raw).expect("should parse malformed real-world message");
         assert_eq!(extract_recipients(&msg, "csl"), vec!["csl"]);
-        assert_eq!(original_sender(&msg), None);
+        assert!(original_sender(&msg).is_none());
     }
 
     /// Real message carrying an `X-Forwarded-To` header alongside a
@@ -302,7 +341,7 @@ mod real_sample_tests {
         let raw = fixture("atq3c8qh13hbclfkcnckqg329imgus5bcqlje281");
         let msg = parse_message(&raw).expect("should parse real message");
         assert_eq!(extract_recipients(&msg, "csl"), vec!["chad@planetlauritsen.com"]);
-        assert_eq!(original_sender(&msg).as_deref(), Some("noreply@civicplus.com"));
+        assert_eq!(original_sender(&msg).map(|s| s.email).as_deref(), Some("noreply@civicplus.com"));
     }
 
     /// Plain real message with a single `To` address and normal `From`.
@@ -311,7 +350,7 @@ mod real_sample_tests {
         let raw = fixture("s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1");
         let msg = parse_message(&raw).expect("should parse real message");
         assert_eq!(extract_recipients(&msg, "csl"), vec!["sherlink@planetlauritsen.com"]);
-        assert_eq!(original_sender(&msg).as_deref(), Some("google-noreply@google.com"));
+        assert_eq!(original_sender(&msg).map(|s| s.email).as_deref(), Some("google-noreply@google.com"));
     }
 
     /// Ensures the header-rewrite pass round-trips real, large,
@@ -335,7 +374,7 @@ mod real_sample_tests {
             let raw = fixture(name);
             let msg = parse_message(&raw).unwrap_or_else(|| panic!("failed to parse {name}"));
             let sender = original_sender(&msg);
-            let rewritten = rewrite_sender_headers(&raw, sender.as_deref(), "ses-forwarder@planetlauritsen.com");
+            let rewritten = rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
 
             let original_body = split_header_block(&raw).map(|(_, _, body)| body);
             let rewritten_body = split_header_block(&rewritten).map(|(_, _, body)| body);
