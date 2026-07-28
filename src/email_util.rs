@@ -60,12 +60,13 @@ pub fn rewrite_sender_headers(raw: &[u8], original_sender: Option<&str>, forward
     let header_text = String::from_utf8_lossy(header_block);
     let mut lines = fold_header_lines(&header_text);
 
-    match original_sender {
-        Some(sender) if !sender.is_empty() => {
+    // SES requires the From address to be a verified identity/domain.
+    // Always rewrite From to the forwarder address so it passes SES verification,
+    // and preserve the original sender in Reply-To so replies still reach them.
+    set_header(&mut lines, "From", forwarder_address);
+    if let Some(sender) = original_sender {
+        if !sender.is_empty() {
             set_header(&mut lines, "Reply-To", sender);
-        }
-        _ => {
-            set_header(&mut lines, "From", forwarder_address);
         }
     }
 
@@ -228,10 +229,10 @@ Body text.\r\n";
     }
 
     #[test]
-    fn rewrites_existing_reply_to_and_preserves_from() {
+    fn rewrites_from_and_reply_to_when_sender_present() {
         let rewritten = rewrite_sender_headers(SAMPLE_WITH_REPLY_TO, Some("alice@example.com"), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
-        assert!(text.contains("From: Alice <alice@example.com>\r\n"));
+        assert!(text.contains("From: forwarder@example.com\r\n"));
         assert!(text.contains("Reply-To: alice@example.com\r\n"));
         assert!(!text.contains("old@example.com"));
         assert!(text.ends_with("Body text.\r\n"));
@@ -241,7 +242,7 @@ Body text.\r\n";
     fn inserts_reply_to_when_missing() {
         let rewritten = rewrite_sender_headers(SAMPLE_TO_CC, Some("alice@example.com"), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
-        assert!(text.contains("From: Alice <alice@example.com>\r\n"));
+        assert!(text.contains("From: forwarder@example.com\r\n"));
         assert!(text.contains("Reply-To: alice@example.com\r\n"));
     }
 
@@ -250,6 +251,7 @@ Body text.\r\n";
         let rewritten = rewrite_sender_headers(SAMPLE_EMPTY_FROM, None, "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
         assert!(text.contains("From: forwarder@example.com\r\n"));
+        assert!(!text.contains("Reply-To"));
     }
 }
 
