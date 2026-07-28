@@ -73,8 +73,11 @@ pub fn rewrite_sender_headers(raw: &[u8], sender: Option<&SenderInfo>, forwarder
     let from_value = build_from_value(sender, forwarder_address);
     set_header(&mut lines, "From", &from_value);
 
-    // SES also checks the Sender header if present. Strip it so SES only sees
-    // the rewritten From address.
+    // Strip headers that SES uses as the envelope sender for identity verification.
+    // Return-Path is set by the originating MTA and overrides from_email_address
+    // when present in the raw message. Sender is also checked if present.
+    // SES will set correct Return-Path/Sender from our from_email_address parameter.
+    remove_header(&mut lines, "Return-Path");
     remove_header(&mut lines, "Sender");
 
     // Set Reply-To to the original sender's email so replies reach them,
