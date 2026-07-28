@@ -154,12 +154,13 @@ async fn process_sqs_message(
                         }
                     }
                     ProcessOutcome::PermanentFailure(err) => {
-                        tracing::error!("{s3url} Failed to process email from SQS record: {err}");
-                        tracing::warn!("Permanent failure for {s3url}, deleting SQS message to avoid retry loop.");
-                        // A permanent per-record failure is treated like the
-                        // Python code's delete-on-permanent-failure path; the
-                        // rest of the batch still governs whether the SQS
-                        // message itself is deleted below.
+                        tracing::error!("{s3url} Permanent failure processing email: {err}");
+                        // Retrying will never succeed; delete the S3 object to avoid leaking it.
+                        if let Err(e) = s3.delete_object().bucket(&s3_bucket).key(&s3_key).send().await {
+                            tracing::error!("Failed to delete S3 object {s3url} after permanent failure: {e}");
+                        } else {
+                            tracing::warn!("Deleted S3 object {s3url} after permanent failure (email not delivered)");
+                        }
                     }
                     ProcessOutcome::TransientFailure(err) => {
                         tracing::error!("{s3url} Failed to process email from SQS record: {err}");
