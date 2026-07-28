@@ -58,20 +58,23 @@ pub async fn forward_via_ses(
                 }
             };
             Err(match service_err {
+                // Configuration/application errors: the email itself is fine but our
+                // setup is broken. Preserve the S3 object for reprocessing after the
+                // issue is fixed, and move straight to DLQ (no retries will help).
                 SendEmailError::MessageRejected(e) => {
-                    ProcessOutcome::PermanentFailure(format!("Message rejected by SES: {e}"))
+                    ProcessOutcome::ParsingFailure(format!("SES rejected message (unverified identity or sandbox restriction): {e}"))
                 }
                 SendEmailError::BadRequestException(e) => {
-                    ProcessOutcome::PermanentFailure(format!("Bad request to SES: {e}"))
+                    ProcessOutcome::ParsingFailure(format!("SES bad request (likely a code bug): {e}"))
                 }
                 SendEmailError::MailFromDomainNotVerifiedException(e) => {
-                    ProcessOutcome::PermanentFailure(format!("Sending domain not verified: {e}"))
+                    ProcessOutcome::ParsingFailure(format!("SES sending domain not verified: {e}"))
                 }
                 SendEmailError::AccountSuspendedException(e) => {
-                    ProcessOutcome::PermanentFailure(format!("SES account suspended: {e}"))
+                    ProcessOutcome::ParsingFailure(format!("SES account suspended: {e}"))
                 }
                 SendEmailError::SendingPausedException(e) => {
-                    ProcessOutcome::PermanentFailure(format!("SES sending paused: {e}"))
+                    ProcessOutcome::ParsingFailure(format!("SES sending paused: {e}"))
                 }
                 SendEmailError::LimitExceededException(e) => {
                     ProcessOutcome::TransientFailure(format!("SES limit exceeded: {e}"))
