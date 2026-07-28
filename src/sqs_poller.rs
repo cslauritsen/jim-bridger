@@ -261,7 +261,10 @@ async fn process_email_message(
 
     for r in &recipients {
         let norm_r = r.to_lowercase();
-        let Some(entry) = routing_map.get(&norm_r) else {
+        let base_addr = strip_plus_address(&norm_r);
+        let entry = routing_map.get(&norm_r)
+            .or_else(|| base_addr.as_deref().and_then(|b| routing_map.get(b)));
+        let Some(entry) = entry else {
             tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
             continue;
         };
@@ -299,4 +302,36 @@ async fn process_email_message(
     }
 
     ProcessOutcome::Success
+}
+
+/// Strips the plus extension from an email address, returning the base address.
+/// Returns `None` if the address has no plus extension or no `@`.
+/// e.g. `"chad+blah@example.com"` → `Some("chad@example.com")`
+fn strip_plus_address(addr: &str) -> Option<String> {
+    let at = addr.rfind('@')?;
+    let local = &addr[..at];
+    let domain = &addr[at..]; // includes the '@'
+    let plus = local.find('+')?;
+    Some(format!("{}{}", &local[..plus], domain))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn strips_plus_extension() {
+        assert_eq!(strip_plus_address("chad+blah@example.com").as_deref(), Some("chad@example.com"));
+        assert_eq!(strip_plus_address("user+tag+extra@example.com").as_deref(), Some("user@example.com"));
+    }
+
+    #[test]
+    fn no_plus_returns_none() {
+        assert_eq!(strip_plus_address("chad@example.com"), None);
+    }
+
+    #[test]
+    fn no_at_returns_none() {
+        assert_eq!(strip_plus_address("notanemail"), None);
+    }
 }
