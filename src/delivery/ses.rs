@@ -19,6 +19,17 @@ pub async fn forward_via_ses(
 ) -> Result<(), ProcessOutcome> {
     tracing::info!("Forwarding message via SES: envelope-from={envelope_sender}, recipients={recipients:?}");
 
+    // Log the headers of the outgoing message so we can verify the rewrite.
+    if tracing::enabled!(tracing::Level::DEBUG) {
+        let header_end = raw_message
+            .windows(4)
+            .position(|w| w == b"\r\n\r\n")
+            .or_else(|| raw_message.windows(2).position(|w| w == b"\n\n"))
+            .unwrap_or(raw_message.len().min(2048));
+        let headers = String::from_utf8_lossy(&raw_message[..header_end]);
+        tracing::debug!("Outgoing message headers:\n{headers}");
+    }
+
     let content = EmailContent::builder()
         .raw(RawMessage::builder().data(Blob::new(raw_message)).build().map_err(|e| {
             ProcessOutcome::PermanentFailure(format!("Failed to build raw SES message: {e}"))
