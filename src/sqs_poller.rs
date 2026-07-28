@@ -262,6 +262,7 @@ async fn process_email_message(
     for r in &recipients {
         let norm_r = r.to_lowercase();
         let Some(entry) = routing_map.get(&norm_r) else {
+            tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
             continue;
         };
         for rule in &entry.targets {
