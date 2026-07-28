@@ -153,6 +153,14 @@ async fn process_sqs_message(
                             tracing::info!("Successfully processed and deleted S3 object: {s3url}");
                         }
                     }
+                    ProcessOutcome::ParsingFailure(err) => {
+                        tracing::error!("{s3url} Could not parse email: {err} — S3 object preserved for inspection, moving SQS message to DLQ immediately");
+                        // Don't delete the S3 object — leave it for manual inspection.
+                        // Don't retry — a corrupt message will never parse. Go straight to DLQ
+                        // and delete the original SQS message.
+                        move_to_dlq(config, sqs, queue_url, &body).await;
+                        delete_message(sqs, queue_url, &receipt_handle).await;
+                    }
                     ProcessOutcome::PermanentFailure(err) => {
                         tracing::error!("{s3url} Permanent failure processing email: {err}");
                         // Retrying will never succeed; delete the S3 object to avoid leaking it.
@@ -210,6 +218,18 @@ async fn delete_message(sqs: &SqsClient, queue_url: &str, receipt_handle: &str) 
     }
 }
 
+async fn move_to_dlq(config: &Config, sqs: &SqsClient, queue_url: &str, body: &str) {
+    if let Err(e) = sqs
+        .send_message()
+        .queue_url(config.sqs_dlq_url.as_str())
+        .message_body(body)
+        .send()
+        .await
+    {
+        tracing::error!("Failed to send message to DLQ: {e}");
+    }
+}
+
 async fn move_to_dlq_if_exhausted(
     config: &Config,
     sqs: &SqsClient,
@@ -220,15 +240,7 @@ async fn move_to_dlq_if_exhausted(
 ) {
     if retry_count >= config.sqs_max_retries {
         tracing::warn!("Moving message to DLQ after {retry_count} attempts");
-        if let Err(e) = sqs
-            .send_message()
-            .queue_url(config.sqs_dlq_url.as_str())
-            .message_body(body)
-            .send()
-            .await
-        {
-            tracing::error!("Failed to send message to DLQ: {e}");
-        }
+        move_to_dlq(config, sqs, queue_url, body).await;
         delete_message(sqs, queue_url, receipt_handle).await;
     }
 }
@@ -251,7 +263,7 @@ async fn process_email_message(
     raw_email: &[u8],
 ) -> ProcessOutcome {
     let Some(parsed) = email_util::parse_message(raw_email) else {
-        return ProcessOutcome::PermanentFailure("Failed to parse email message".to_string());
+        return ProcessOutcome::ParsingFailure("Failed to parse raw email bytes".to_string());
     };
 
     let recipients = email_util::extract_recipients(&parsed, &config.default_recipient);
