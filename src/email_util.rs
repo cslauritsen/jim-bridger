@@ -80,6 +80,14 @@ pub fn rewrite_sender_headers(raw: &[u8], sender: Option<&SenderInfo>, forwarder
     remove_header(&mut lines, "Return-Path");
     remove_header(&mut lines, "Sender");
 
+    // Strip the original DKIM signature(s). They no longer validate once we
+    // rewrite `From` above, and forwarded mail (e.g. via another SES relay)
+    // can already carry more than one `DKIM-Signature` header — SES's
+    // SendEmail/SendRawEmail rejects any raw message containing more than
+    // one, since it always adds its own signature for the outgoing send:
+    // "BadRequestException: Duplicate header 'DKIM-Signature'".
+    remove_header(&mut lines, "DKIM-Signature");
+
     // Set Reply-To to the original sender's email so replies reach them,
     // but only if the message doesn't already have its own Reply-To.
     if let Some(s) = sender {
@@ -366,6 +374,26 @@ mod real_sample_tests {
         assert_eq!(original_sender(&msg).map(|s| s.email).as_deref(), Some("google-noreply@google.com"));
     }
 
+    /// Real forwarded message (a "Fwd:" from Chad relayed through the
+    /// original sender's own SES account) that arrives with **two**
+    /// `DKIM-Signature` headers already present. Re-sending this raw via SES
+    /// without stripping them causes `BadRequestException: Duplicate header
+    /// 'DKIM-Signature'`, since SES always adds its own signature for the
+    /// outgoing send. The rewrite must strip all pre-existing signatures.
+    #[test]
+    fn strips_duplicate_dkim_signatures_on_real_message() {
+        let raw = fixture("u1edf3ubb5jbs5fecpumbbm70bhk0vtmuu51ca01");
+        let msg = parse_message(&raw).expect("should parse real message");
+        let sender = original_sender(&msg);
+        let rewritten = rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
+        let (header_block, _, _) = split_header_block(&rewritten).expect("should have header block");
+        let header_text = String::from_utf8_lossy(header_block);
+        assert!(
+            !has_header(&fold_header_lines(&header_text), "DKIM-Signature"),
+            "rewritten headers must not contain any DKIM-Signature: {header_text}"
+        );
+    }
+
     /// Ensures the header-rewrite pass round-trips real, large,
     /// multi-part/MIME messages without corrupting the body: byte length
     /// changes should be limited to the header block, and the body bytes
@@ -382,6 +410,7 @@ mod real_sample_tests {
             "eb6emvij2fj9vjh8lfmbo3vbaep130653qqii5o1",
             "pme2o3jsue7lc37h7b56jj703ft5jom21hfc5v01",
             "s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1",
+            "u1edf3ubb5jbs5fecpumbbm70bhk0vtmuu51ca01",
         ];
         for name in names {
             let raw = fixture(name);

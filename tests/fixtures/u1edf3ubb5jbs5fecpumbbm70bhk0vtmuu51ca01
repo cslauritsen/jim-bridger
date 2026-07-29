@@ -1,0 +1,130 @@
+Return-Path: <010f019fb0024f5e-d2c0f88a-f9ee-4e7a-aeda-f93595eb49df-000000@us-east-2.amazonses.com>
+Received: from e226-6.smtp-out.us-east-2.amazonses.com (e226-6.smtp-out.us-east-2.amazonses.com [23.251.226.6])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id u1edf3ubb5jbs5fecpumbbm70bhk0vtmuu51ca01
+ for kim@planetlauritsen.com;
+ Wed, 29 Jul 2026 22:32:49 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of us-east-2.amazonses.com designates 23.251.226.6 as permitted sender) client-ip=23.251.226.6; envelope-from=010f019fb0024f5e-d2c0f88a-f9ee-4e7a-aeda-f93595eb49df-000000@us-east-2.amazonses.com; helo=e226-6.smtp-out.us-east-2.amazonses.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of us-east-2.amazonses.com designates 23.251.226.6 as permitted sender) client-ip=23.251.226.6; envelope-from=010f019fb0024f5e-d2c0f88a-f9ee-4e7a-aeda-f93595eb49df-000000@us-east-2.amazonses.com; helo=e226-6.smtp-out.us-east-2.amazonses.com;
+ dkim=pass header.i=@amazonses.com;
+ dkim=pass header.i=@planetlauritsen.com;
+ dmarc=pass header.from=planetlauritsen.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFFMURpeldxanl1eHpjenR5YWRWUHBkektIeDdqUFpnZU1mbGtZdDNGNTMyT1hzRW80YmdSeUF4bmV6OWFscERtbjJibHdFaE1MaFB4YmM2c3g3S0l3ZkErVnhKRW5OYVU0b0lEVFVKV1VpWGdFdldkSC9ZTkp1R1VRYy9ock5XZHRYT3Zjd3dBYlR6dFpHbVNmR01yVnlscGl5dHdaeTZKc2JrQzlKeWk5M05CSjR3YlVXV1FUbW4xcEJuNTFZMFpldTZIZGRYL0NxTXduVTdKekw4eXljd3ZaRGE4Nk9QOW01ekNqdExLcFJXYVd3WEY4Vm5jZXg2aHNuM0M3OWVxZHIrVTFveUI5NVJkREdEYkV3ZGovQWg0L2JSa1AvVnZFdU8ycUs0RWZCQ3dOekZXRC9QMDZLQzBJWVorYTBpQUJhMFUzQ2tUelZyWmRsczUrd2FJVHdwS1VvelpRaWxsR0dURzVjcW5reTBsb3Fua2tDNm8zenhDWDZMa3hWdGFVPQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=o8roRKVsephShMbtSVIG6sIorG9NPXpr5HPacoaXsiDedTjOGAPVZ1i8bRXm4nF4UNbQcxUp+SqfGmkUDS/x6LH7SatACTIGYuiGkN0Bf4VjXBiqyICZ5+qSb8EaJEUPp0QmeXnMXJO6OGD14+e5Z5N457bSnJN7EgCEnAPgVWI=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1785364370; v=1; bh=z9OAjCqTCXlTOCWkzQiQocvl/7SzhnytiZ4EXD+yYq0=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=p764udurxgxvfbtzvr5mmwy5i2tgkyzw; d=planetlauritsen.com;
+	t=1785364369;
+	h=MIME-Version:Date:From:To:Subject:In-Reply-To:References:Message-ID:Content-Type:Content-Transfer-Encoding;
+	bh=z9OAjCqTCXlTOCWkzQiQocvl/7SzhnytiZ4EXD+yYq0=;
+	b=su8hWYhopv2btMnXFzjP4D8BVb1eCnWq4Ik1CwtdlzoRR9a1URCVV4tZmd5I04EV
+	IbaensMmhEAvNU/QmOsVJE2nCRibhyd2vtHCSXArQllUDu8bGLVSXOheCTZ/6nXwiyj
+	XXnbzf25pkleQX28Ysm3DsIxrjvrCcNgNT8lB5E2htR7Z2TNwOHuZNS6ekUmR6sNJwH
+	g6l8nz7ieQWEXOw2UVu8LxMXts2D2V6QnZLvUVB/wk5MdPK/anF/v7UzxG0T9glOwIS
+	q4vSPq7aVMPDtHpHLO4d4D2TU6L/ef2q7/xD1E+e1lHgEwUcwGizYwYnHEfCqbW507i
+	twowKRF++g==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1785364369;
+	h=MIME-Version:Date:From:To:Subject:In-Reply-To:References:Message-ID:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=z9OAjCqTCXlTOCWkzQiQocvl/7SzhnytiZ4EXD+yYq0=;
+	b=R87ENMy5de2Sn6Z3PofLEUU8sd1FJhcdhxjI8ilGoadlkcA4tlf98BESksEO6jt1
+	Ijadrgn7nzHArBIMnclW/wysQq8ZBuq3tsqRrVqjvX8Lo9UdLvyyS5txzYwxas1MCX8
+	gGkQbBuxVEMGiq3aC9xChE8tMCC5sPxLrxsykUiM=
+MIME-Version: 1.0
+Date: Wed, 29 Jul 2026 22:32:49 +0000
+From: Chad Lauritsen <chad@planetlauritsen.com>
+To: kim@planetlauritsen.com
+Subject: Fwd: New CWRU Billing statement
+In-Reply-To: <0100019fa9c37209-ff2b1d73-8b7a-4b7f-aca8-8170abb7645e-000000@email.amazonses.com>
+References: <0100019fa9c37209-ff2b1d73-8b7a-4b7f-aca8-8170abb7645e-000000@email.amazonses.com>
+Message-ID: <010f019fb0024f5e-d2c0f88a-f9ee-4e7a-aeda-f93595eb49df-000000@us-east-2.amazonses.com>
+X-Sender: chad@planetlauritsen.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: ::1.us-east-2.qhZjBv/XK0LHN9kvUQn+MCBvF0AHJtIFYnYeQFuJwBE=:AmazonSES
+X-SES-Outgoing: 2026.07.29-23.251.226.6
+
+Mrs. Lauritsen,
+Could you call the guy and have them move money from Cole's 529 direct 
+to CWRU to pay?
+
+Thanks,
+Hubby
+
+-------- Original Message --------
+Subject: New CWRU Billing statement
+Date: 2026-07-28 13:26
+ From: Case Western Reserve University <studentaccounts@case.edu>
+To: csl4jc@gmail.com
+Reply-To: studentaccounts@case.edu
+
+New activity has been posted to the student’s account for whom you are
+an authorized user since the last billing statement. The billing
+statement dated 07/28/2026 is now available to view by logging into the
+Student Information System (SIS).
+
+Student ID Number: 3706309
+Account Balance: $10,914.00
+Due Date: 09/04/2026
+
+The Account Balance now includes Fall 2026 charges and the Due Date
+stated is for new Fall 2026 charges only. Previously billed charges may
+now be past due. Please review your student’s account activity or
+statement of account in SIS (navigation is Authorized User Home >
+Finances > Financial Account) for additional details.
+
+An account balance with brackets ($) is a credit balance on you﻿r
+student’s account and refunds of a credit balance will be issued
+according to the university's Credit Balance and Student Refund Policy
+[1].
+
+		Login Now [2]
+
+Special Notices:
+
+	* The display of pending aid will be removed when fall disbursement
+begins. Accounts with a credit balance (CR) after financial aid has been
+disbursed will be refunded after the first day of class. If all aid has
+not disbursed, please contact the Office of Financial Aid at
+216.368.4530 or financialaid@case.edu.
+	* The lockbox remittance address of P.O. Box 74056 will be
+discontinued. Please mail all payments directly to the University’s
+address. Please view our website for payment options and mailing
+address: Payment Options [3]
+	* All students enrolled in one or more credit hours for Fall 2026 are
+automatically enrolled in CWRU's Student Medical Plan. However, if a
+student has comparable health coverage, the student only may elect to
+waive the plan and the fee will be waived. Please see Health Waiver
+Process [4] for additional instructions. The deadline to waive is
+Friday, September 4.
+	* Graduate and professional students who elect to opt-out of the One to
+One Fitness Membership must do each year. The student is the only person
+who can waive this fee. The student can review or waive their status.
+Please visit the Student Financial Guide [5] for waiver instructions.
+The deadline to waive is Friday, September 4.
+	* Fall 2026 housing and meal plan charges for undergraduate students
+are based on current room assignment and meal plan selection. Any
+changes will be adjusted in the upcoming weeks and reflected in the next
+billing statement.
+
+Find Out More About Student Accounts:
+
+      Case Western Reserve University
+      Sears Library Building, Suite 219 (Case Quad)
+      216.368.2226
+      https://case.edu/studentaccounts
+
+
+
+Links:
+------
+[1] 
+https://case.edu/studentaccounts/your-student-account/credit-balance-and-student-refund-policy
+[2] https://sis.case.edu/
+[3] https://case.edu/studentaccounts/billing-payments/payment-options
+[4] 
+https://case.edu/studentlife/healthcounseling/medical-plan/waiver-information/health-waiver-process
+[5] 
+https://case.edu/studentaccounts/your-student-account/sis-financial-guide/one-one-fitness
