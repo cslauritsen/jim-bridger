@@ -1,0 +1,45 @@
+Return-Path: <>
+Received: from lvps83-169-40-216.dedicated.hosteurope.de (lvps83-169-40-216.dedicated.hosteurope.de [83.169.40.216])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id 34hkfr3mrk2pgrbvmcqlbi3d0vj4bekh6d9cts01
+ for noc@planetlauritsen.com;
+ Fri, 17 Jul 2026 16:20:01 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: none (spfCheck: 83.169.40.216 is neither permitted nor denied by domain of lvps83-169-40-216.dedicated.hosteurope.de) client-ip=83.169.40.216; envelope-from=postmaster@lvps83-169-40-216.dedicated.hosteurope.de; helo=lvps83-169-40-216.dedicated.hosteurope.de;
+Authentication-Results: amazonses.com;
+ spf=none (spfCheck: 83.169.40.216 is neither permitted nor denied by domain of lvps83-169-40-216.dedicated.hosteurope.de) client-ip=83.169.40.216; envelope-from=postmaster@lvps83-169-40-216.dedicated.hosteurope.de; helo=lvps83-169-40-216.dedicated.hosteurope.de;
+ dmarc=permerror;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFFcG5ENjJzb2ZDUjd4dldkMC9QQ1libmxPWmV1blBSL05SQzNFbU56NTRLb1oxSmpLd213dE9YNTdCOFRLQkg0OS9jQ09wbDhESFMzOHViT01oRkY3VExtQkpqcEFjVTVVd1Z2NFlyWE1MWlBKSWl1YU51YmJ5UGIxRUltRmlwUjlndEdPclhXRXV5S0hUTHRmVEY4S1h4cldZSGJEeHg3NXhLak51UzBhcU1OaHV1MTg1U3ZpQWNwVm9NM0hveVdMNWlxc0xtVEplZW5NbDBBZkQ5Y1RDTk1CV0Z4TjRIaU9jOU1BSlZiRG50RE45MW5NcjlZWEQ4Q3VaNlVzNW16TGs2YStQVEtlSmhzYmZHOHhjazNiaA==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=K4RipK6iLJVsAcy3xBovZDzqaAiqs0Vh9+el+FLPYhv4aJK2hF/KBJFh/6hmMMl2E5bKdfJqROWAhqaX4Tvb7PyHpKy7BaunWsTeUlJeI0V45JkX889mgN2bC6zMNMVWnyMWdUCNzr5EU3mzaWQe6dFNBjB1rx7Qpe3QccdOzfg=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1784305202; v=1; bh=+G1TK1bV8bkoIPh0eVxI1/9Kx/fGs6MUEzyaxmv4Sk4=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: from [184.174.20.234] (unknown [184.174.20.234])
+	by lvps83-169-40-216.dedicated.hosteurope.de (Postfix) with ESMTPSA id 2810984B25;
+	Fri, 17 Jul 2026 15:45:13 +0000 (UTC)
+Authentication-Results: lvps83-169-40-216.dedicated.hosteurope.de;
+        spf=pass (sender IP is 184.174.20.234) smtp.mailfrom= smtp.helo=[184.174.20.234]
+Received-SPF: pass (lvps83-169-40-216.dedicated.hosteurope.de: connection is authenticated)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Sie_haben_2=2E500=2E000=2C00_=C2=A3_gewonnen?=
+To: Recipients <>
+From: Chris<>
+Date: Fri, 17 Jul 2026 08:45:33 -0700
+Reply-To: anthonyhohnc@gmail.com
+X-PPP-Message-ID: 
+ <178430312101.15077.12388047169659549766@lvps83-169-40-216.dedicated.hosteurope.de>
+X-PPP-Vhost: mch-klinik.de
+
+Herzlichen Gl=FCckwunsch!
+
+Sie haben soeben einen Preis im Wert von 2.500.000,00 =A3 bei der Sir Chris=
+topher Anthony Hohn Mega-Verlosung gewonnen. Ihre E-Mail-Adresse wurde welt=
+weit von einem automatisierten Computersystem ausgew=E4hlt. Ihre E-Mail-Adr=
+esse geh=F6rt zu den gl=FCcklichen Gewinnern, daher erhalten Sie diese Nach=
+richt. Ihre Gewinnreferenznummer lautet ZKHRG45K. Um Ihren Gewinn einzul=F6=
+sen, kontaktieren Sie mich bitte unter chrishohn85@hotmail.com
+
+Mehr =FCber mich erfahren Sie hier: https://en.wikipedia.org/wiki/Chris_Hohn
+
+Mit freundlichen Gr=FC=DFen, Ihr Hedgefonds-Manager Sir Christopher Anthony=
+ Hohn
