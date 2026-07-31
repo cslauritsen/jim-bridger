@@ -1,0 +1,22 @@
+{
+  "userlocal@example.com": {
+    "targets": [
+      {
+        "target": "csl",
+        "type": "lda"
+      }
+    ]
+  },
+  "admins@example.com": {
+    "targets": [
+      {
+        "target": "some.other.user@example.org",
+        "type": "smtp"
+      },
+      {
+        "target": "root",
+        "type": "lda"
+      }
+    ]
+  }
+}
