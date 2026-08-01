@@ -281,14 +281,13 @@ async fn process_email_message(
     let mut smtp_recipients = Vec::new();
 
     for r in &recipients {
-        let norm_r = r.to_lowercase();
-        let base_addr = strip_plus_address(&norm_r);
-        let entry = routing_map.get(&norm_r)
-            .or_else(|| base_addr.as_deref().and_then(|b| routing_map.get(b)));
-        let Some(entry) = entry else {
-            tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
-            continue;
-        };
+    let norm_r = r.to_lowercase();
+    let matching = routing_map.matching(&norm_r);
+    if matching.is_empty() {
+        tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
+        continue;
+    }
+    for entry in matching {
         for rule in &entry.targets {
             match rule.target_type.as_str() {
                 "lda" => {
@@ -299,19 +298,18 @@ async fn process_email_message(
                 }
                 "smtp" => {
                     tracing::info!("smtp forward {norm_r} -> {}", rule.target);
-                    smtp_recipients.push(rule.target.clone());
+                    if !smtp_recipients.contains(&rule.target) {
+                        smtp_recipients.push(rule.target.clone());
+                    }
                 }
                 other => {
-                    // A bad `type` value is a static configuration error, not
-                    // a transient one; retrying without a human fixing the
-                    // alias JSON will never succeed, so treat it as
-                    // permanent to avoid an infinite redelivery loop.
                     return ProcessOutcome::PermanentFailure(format!(
                         "Unknown routing rule: {other} for {norm_r}"
                     ));
                 }
             }
         }
+    }
     }
 
     if !smtp_recipients.is_empty() {
@@ -325,34 +323,9 @@ async fn process_email_message(
     ProcessOutcome::Success
 }
 
-/// Strips the plus extension from an email address, returning the base address.
-/// Returns `None` if the address has no plus extension or no `@`.
-/// e.g. `"chad+blah@example.com"` → `Some("chad@example.com")`
-fn strip_plus_address(addr: &str) -> Option<String> {
-    let at = addr.rfind('@')?;
-    let local = &addr[..at];
-    let domain = &addr[at..]; // includes the '@'
-    let plus = local.find('+')?;
-    Some(format!("{}{}", &local[..plus], domain))
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    #[test]
-    fn strips_plus_extension() {
-        assert_eq!(strip_plus_address("chad+blah@example.com").as_deref(), Some("chad@example.com"));
-        assert_eq!(strip_plus_address("user+tag+extra@example.com").as_deref(), Some("user@example.com"));
-    }
-
-    #[test]
-    fn no_plus_returns_none() {
-        assert_eq!(strip_plus_address("chad@example.com"), None);
-    }
-
-    #[test]
-    fn no_at_returns_none() {
-        assert_eq!(strip_plus_address("notanemail"), None);
-    }
+    // strip_plus_address was removed; plus-addressing is now handled by writing
+    // a regex pattern such as `^user(\+[^@]*)?@example\.com$` in the routing
+    // config JSON.
 }

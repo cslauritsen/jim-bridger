@@ -1,0 +1,31 @@
+{
+  "^userlocal@example\\.com$": {
+    "targets": [
+      {
+        "target": "csl",
+        "type": "lda"
+      }
+    ]
+  },
+  "^admins@example\\.com$": {
+    "targets": [
+      {
+        "target": "some.other.user@example.org",
+        "type": "smtp"
+      },
+      {
+        "target": "root",
+        "type": "lda"
+      }
+    ]
+  },
+  "^.*@example\\.com$": {
+    "comment_not_a_field": "catch-all: archive every message for this domain",
+    "targets": [
+      {
+        "target": "archive",
+        "type": "lda"
+      }
+    ]
+  }
+}
