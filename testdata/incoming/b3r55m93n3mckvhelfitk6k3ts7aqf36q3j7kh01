@@ -1,0 +1,101 @@
+Return-Path: <moises.peres@adventistas.org>
+Received: from useb-aes-gw-01.adventistas.org (useb-aes-gw-01.adventistas.org [189.39.53.183])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id b3r55m93n3mckvhelfitk6k3ts7aqf36q3j7kh01
+ for noc@planetlauritsen.com;
+ Wed, 01 Jul 2026 16:44:49 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of adventistas.org designates 189.39.53.183 as permitted sender) client-ip=189.39.53.183; envelope-from=moises.peres@adventistas.org; helo=useb-aes-gw-01.adventistas.org;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of adventistas.org designates 189.39.53.183 as permitted sender) client-ip=189.39.53.183; envelope-from=moises.peres@adventistas.org; helo=useb-aes-gw-01.adventistas.org;
+ dkim=pass header.i=@adventistas.org;
+ dmarc=pass header.from=adventistas.org;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFIZzhxTEJJUFRnZnVBMFpvb1UzSGptQzJkUTVKU1JqNWJPbDBDM3FNU1dWdUhhODFxb2ZXQmtRRWovZmJKNkJKUmlRTzIwbjM4ODRFK0N3emdnQUVYUFlJZ1ArVkp5OUwydUdIeGtoVFBUVEpWQUxMbzZabnRpYTJtdWxwMEZlcVdLNzNGU21zbFBwVzJ5L0g3ejFFZUVaZThlZS9RcjQxd2RpWlR4WGdVanpUb0VaZDdPeTZuMG9VRVVDZTVnNzJ4cjdVUGI0UlpwQzBPY3krNXpWZkxvL2hkNFdzVUVPM1RjcHlPUWJSSnJGc0t0dThQZGU0RVFHQk1CcHVCSWdpcERHeEkwNWpWUkh0Y2lpdjFaLzYwSCtRQ2JRTjZHbS9xeUV5WWhoSzd3MXc9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=G4Unq7md5iBBhSUlnmztJmUwPBDOwe1QLl6tLz01dUPqPOX8L5hpws5zq9FGcM0yc8Rej4yJWF3hz8yIlxlpir+uaAYX5nripvEr7eDl81mo8OimxzP1LxfamZT3Y0Si7uWhtjtmT57EPr4N+XXL9rPbJzX1InxGjvSTuBc0k+A=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1782924290; v=1; bh=PCOMZnAbIhlN9/XetSq0jN9NaZfEWEL0ry5G5W2DLM8=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: from useb-aes-gw-01.adventistas.org (localhost.useb-aes-gw-01.adventistas.org [127.0.0.1])
+	by useb-aes-gw-01.adventistas.org (Postfix) with ESMTP id 1C57A951252
+	for <noc@planetlauritsen.com>; Wed,  1 Jul 2026 13:35:34 -0300 (-03)
+Authentication-Results: useb-aes-gw-01.adventistas.org (amavisd-new);
+	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
+	header.d=adventistas.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=adventistas.org;
+	 h=user-agent:message-id:reply-to:subject:subject:to:from:from
+	:date:date:content-type:content-type:mime-version; s=t8ctqa74;
+	 t=1782923734; x=1783787735; bh=PCOMZnAbIhlN9/XetSq0jN9NaZfEWEL0
+	ry5G5W2DLM8=; b=E1NPzORSZkcRBfYTk+dU3eAMh3scN7/lIrf8Ky1U9r/yrQTW
+	dAZifjGAdLdUv9AYx8ziH/FmbrwjwA7ZaVMdrNkyQCFRjdEr7K7bAvIo3PSMNJZm
+	voO9rS6AODkk7C8FbMEgtS09R5tsv5keRCmWxLPw8KNY6bf7wVQHP9KuJrg=
+X-Virus-Scanned: amavisd-new at useb-aes-gw-01.adventistas.org
+X-Spam-Flag: NO
+X-Spam-Score: 0
+X-Spam-Level:
+X-Spam-Status: No, score=x tagged_above=-999 required=2 WHITELISTED tests=[]
+	autolearn=unavailable
+Received: from useb-aes-gw-01.adventistas.org ([127.0.0.1])
+	by useb-aes-gw-01.adventistas.org (useb-aes-gw-01.adventistas.org [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ym6TTQ1lcg7G for <noc@planetlauritsen.com>;
+	Wed,  1 Jul 2026 13:35:34 -0300 (-03)
+Received: from useb-aes-gw-01.adventistas.org (localhost.useb-aes-gw-01.adventistas.org [127.0.0.1])
+	by useb-aes-gw-01.adventistas.org (Postfix) with ESMTPSA id 1E1033FC82D;
+	Wed,  1 Jul 2026 12:42:09 -0300 (-03)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="=_87d68a83e394f66c1c57748ad38a5c14"
+Date: Wed, 01 Jul 2026 12:42:09 -0300
+From: Edward James <moises.peres@adventistas.org>
+To: undisclosed-recipients:;
+Subject: Offer!
+Reply-To: edwardjamescollp@gmail.com
+Mail-Reply-To: edwardjamescollp@gmail.com
+Message-ID: <65ff7cc5b38f48c1fd3e4fa9a157cb09@adventistas.org>
+X-Sender: moises.peres@adventistas.org
+User-Agent: Roundcube Webmail
+
+--=_87d68a83e394f66c1c57748ad38a5c14
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+
+Hello,
+
+I am writing to propose a formal business partnership that I believe
+would be mutually beneficial. I am seeking a trusted partner to
+collaborate on this venture.
+
+Upon reaching an agreement to work together, we can determine an
+equitable profit-sharing arrangement. My proposal involves you managing
+my share and the associated investment.   
+
+Please let me know if you are interested in discussing this further so
+that I may provide additional details.
+
+Yours sincerely,
+Edward James.
+--=_87d68a83e394f66c1c57748ad38a5c14
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 12pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<p>Hello,<br /><br />I am writing to propose a formal business partnership =
+that I believe would be mutually beneficial. I am seeking a trusted partner=
+ to collaborate on this venture.<br /><br />Upon reaching an agreement to w=
+ork together, we can determine an equitable profit-sharing arrangement. My =
+proposal involves you managing my share and the associated investment.&nbsp=
+; &nbsp;<br /><br />Please let me know if you are interested in discussing =
+this further so that I may provide additional details.<br /><br />Yours sin=
+cerely,<br />Edward James.</p>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+
+</body></html>
+
+--=_87d68a83e394f66c1c57748ad38a5c14--
