@@ -1,0 +1,103 @@
+Return-Path: <info@loan.com>
+Received: from mail.transvialep.gob.ec (mail.transvialep.gob.ec [179.51.140.253])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id pme2o3jsue7lc37h7b56jj703ft5jom21hfc5v01
+ for noc@planetlauritsen.com;
+ Mon, 06 Jul 2026 00:55:00 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: fail (spfCheck: domain of loan.com does not designate 179.51.140.253 as permitted sender) client-ip=179.51.140.253; envelope-from=info@loan.com; helo=mail.transvialep.gob.ec;
+Authentication-Results: amazonses.com;
+ spf=fail (spfCheck: domain of loan.com does not designate 179.51.140.253 as permitted sender) client-ip=179.51.140.253; envelope-from=info@loan.com; helo=mail.transvialep.gob.ec;
+ dmarc=fail header.from=loan.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFGaGE1d0FLd1A1Q0h6bkxsNm5NLzBKY1h4T21XWC9WbmFiNHR2akpKT09RcGJYZkZVeGx5d3IyQWM5Tm8yZm9COE9jTk9xVktnYWtEMVFWbkJHUnp4ZzdtL2E5eDVveWhXQVNIMFlnY3hSSkora21uUDc3VDZ6MFpSbXB1Zkx0eGc4UUlHdGM0QXlQMDZycms2bFlRRVZGL3pJaE9INmhybUw4WStPVkhwWU82R3JIc1MyV3h0ckdCLys5MTZRVE1YYzZEeHgwQU9wbGQxOTAyQnRyZFpha25sRDFHRHg2cVJ6NGx1RWc3S2U0TVc4ZHlibnNOc3dnNU95c25XUmVHNGU5SVVnNXI0a0Z5eTZmb2NjU25hNm1ESlFnNUF3dkxlRWIzTmRPT2YvdFE9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=qXb8QIuzj7HTh9pXtOcJtuJ2QKgKlqcBnX/jjJjzjS8tvemqH4WIhY6hqbl0hk7m53yFHpjn+Z4MSdsBEZxsPaj7CmJuumz157yBdeWnwhSgPKsMZriaNvsmR1e84J/Ssd9mI2LQMVUUeMrw5XGiPYV5HmYAXCyPYOnAv9Y1drg=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1783299301; v=1; bh=NpWWQn8DWhbbKKVJRem4nXtb3Xpj+X0kjhLcqoPskZk=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: from localhost (localhost [127.0.0.1])
+	by mail.transvialep.gob.ec (Postfix) with ESMTP id 33EFA2093E7;
+	Sun,  5 Jul 2026 12:58:14 -0500 (-05)
+Received: from mail.transvialep.gob.ec ([127.0.0.1])
+ by localhost (mail.transvialep.gob.ec [127.0.0.1]) (amavis, port 10024)
+ with LMTP id Kx77LnhLzidF; Sun,  5 Jul 2026 12:58:14 -0500 (-05)
+Received: from transvialep.gob.ec (localhost [127.0.0.1])
+	by mail.transvialep.gob.ec (Postfix) with ESMTPSA id 734C72079C1;
+	Sun,  5 Jul 2026 12:54:43 -0500 (-05)
+MIME-Version: 1.0
+Date: Sun, 05 Jul 2026 10:54:43 -0700
+From: "Ms. Helen Finola Kerrigan" <info@loan.com>
+To: undisclosed-recipients:;
+Subject: *** SPAM *** Loan Offer at 2% Interest Rate Per Year
+Reply-To: contactecf77@gmail.com
+Mail-Reply-To: contactecf77@gmail.com
+User-Agent: Roundcube/1.6.6
+Message-ID: <7c0bf37879723a52884fdff46a61ecb9@loan.com>
+X-Sender: info@loan.com
+Content-Type: multipart/alternative;
+ boundary="=_670117da4a701cb46208e3f3b6fa8d34"
+X-Spamd-Result: default: False [6.90 / 15.00];
+	R_UNDISC_RCPT(3.00)[];
+	FORGED_RECIPIENTS(2.00)[m:,s:noam@iamwebbing.com,s:noamgr@gilat.com,s:noble_jim@prc.com,s:nobocop@nexter.com,s:nobu@decru.com,s:nobuaki_ohashi@gmx.yamaha.com,s:nobull@mail.com,s:nobuo.matsushita@childrenscolorado.org,s:nobuo@layer3tv.com,s:nobuyoshi.kasahara@jalinfotec.co.jp,s:noc-adm@rosaski.com,s:noc-admin@cpss.edu.hk,s:noc-iana@sourceheads.com,s:noc-mib@towertech.it,s:noc-pen@biglist.com,s:noc.nz@kordia.co.nz,s:noc.oid@zmac1.com,s:noc@2reallife.com,s:noc@EU.net,s:noc@KPNQwest.at,s:noc@aeromaritime.de,s:noc@agava.com,s:noc@aics.ad.jp,s:noc@aims.com.au,s:noc@aliadis.fr,s:noc@alinto.net,s:noc@alleysakura.net,s:noc@altasciences.com,s:noc@americancustomercare.com,s:noc@ams-ix.net,s:noc@anchor.net.au,s:noc@apcera.com,s:noc@appfolio.com,s:noc@aptus.co.tz,s:noc@arin.net,s:noc@as39202.net,s:noc@azores.gov.pt,s:noc@baseddept.net,s:noc@bbtele.net,s:noc@belton.co.nz,s:noc@berrybyte.net,s:noc@bitbuzz.com,s:noc@bmi.com,s:noc@box.nl,s:noc@brightok.net,s:noc@butte.edu,s:noc@caerus.net,s:noc@cam.
+ org,s:noc@caneris.com,s:noc@centracomm.net,s:noc@centralnet.ch,s:noc@cleondris.com,s:noc@clnet.cz,s:noc@cloudflare.com,s:noc@cludo.pl,s:noc@connectitnet.com,s:noc@cpicorp.com,s:noc@csc.lt,s:noc@cso.pt,s:noc@csub.edu,s:noc@cvtc.edu,s:noc@cybersmart.co.za,s:noc@dashwire.com,s:noc@dcs.com.gr,s:noc@dcvc.com,s:noc@dsnetwork.ch,s:noc@duth.gr,s:noc@e-dag.ru,s:noc@e-merge.ie,s:noc@ecornell.com,s:noc@edutel.nl,s:noc@ei3.com,s:noc@ekt.gr,s:noc@elnet.ru,s:noc@emerytelcom.com,s:noc@erre-elle.net,s:noc@erudio.ca,s:noc@eurofmc.com,s:noc@excathedra.co,s:noc@extel.ru,s:noc@fiord.ru,s:noc@flox-arts.net,s:noc@fortrustllc.com,s:noc@fritzinger-consult.de,s:noc@frognet.net,s:noc@getbraintree.com,s:noc@godaddy.com,s:noc@gol.com,s:noc@goldenfrog.com,s:noc@gomez.com,s:noc@gopc.net,s:noc@heanet.ie,s:noc@heg.com,s:noc@hiport.it,s:noc@hoehmann.biz,s:noc@hsbxl.be,s:noc@hsventures.org,s:noc@hybrix.fr,s:noc@hyves.nl];
+	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	RCVD_COUNT_ZERO(0.00)[0];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_ONE(0.00)[1];
+	ARC_NA(0.00)[];
+	FREEMAIL_REPLYTO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[mail.com,gmail.com,hotmail.com,sina.com,aol.com,live.co.uk,gmx.net,sina.cn,comcast.net,mail.ru,videotron.ca,btinternet.com,mailcity.com,yahoo.com,163.com,yahoo.co.in,portugalmail.pt];
+	ALIAS_RESOLVED(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	HAS_REPLYTO(0.00)[contactecf77@gmail.com];
+	LOCAL_OUTBOUND(0.00)[];
+	URIBL_BLOCKED(0.00)[localhost:rdns,transvialep.gob.ec:helo];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[transvialep.gob.ec:helo,loan.com:from_smtp,loan.com:mid,loan.com:from_mime,localhost:rdns];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+
+--=_670117da4a701cb46208e3f3b6fa8d34
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+
+-- 
+HELLO, HOW ARE YOU DOING TODAY, I HOPE YOU'RE DOING GREAT?
+DO YOU NEED A LOAN, OR YOU WANT TO REFINANCE YOUR HOME, PAY OFF BILLS, 
+EXPAND YOUR BUSINESS? LOOK NO FURTHER WE OFFER ALL KINDS OF LOANS AS LOW 
+AS 2% INTEREST RATE PER YEAR, IF INTERESTED, CONTACT US VIA EMAIL: 
+contactecf77@gmail.com
+*Project Loan
+*Business Loans
+*Debt Consolidation Loan
+*Personal Loan
+*Student Loan and lots more
+TO APPLY CONTACT US VIA EMAIL: contactecf77@gmail.com
+
+Regards,
+Helen Finola Kerrigan
+EC-FINANCE (PTY) LTD
+--=_670117da4a701cb46208e3f3b6fa8d34
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 10pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<p><br /></p>
+<div id=3D"signature">-- <br />
+<div class=3D"pre" style=3D"margin: 0; padding: 0; font-family: monospace">=
+HELLO, HOW ARE YOU DOING TODAY, I HOPE YOU'RE DOING GREAT?<br />DO YOU NEED=
+ A LOAN, OR YOU WANT TO REFINANCE YOUR HOME, PAY OFF BILLS, EXPAND YOUR BUS=
+INESS? LOOK NO FURTHER WE OFFER ALL KINDS OF LOANS AS LOW AS 2% INTEREST RA=
+TE PER YEAR, IF INTERESTED, CONTACT US VIA EMAIL: <a href=3D"mailto:contact=
+ecf77@gmail.com">contactecf77@gmail.com</a><br />*Project Loan<br />*Busine=
+ss Loans<br />*Debt Consolidation Loan<br />*Personal Loan<br />*Student Lo=
+an and lots more<br />TO APPLY CONTACT US VIA EMAIL: <a href=3D"mailto:cont=
+actecf77@gmail.com">contactecf77@gmail.com</a><br /><br />Regards,<br />Hel=
+en Finola Kerrigan<br />EC-FINANCE (PTY) LTD</div>
+</div>
+</body></html>
+
+--=_670117da4a701cb46208e3f3b6fa8d34--

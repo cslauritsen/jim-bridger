@@ -1,0 +1,68 @@
+Return-Path: <fazza@mauritiusholidayspackages.co.za>
+Received: from bonobo.aspen.relay.mailchannels.net (bonobo.aspen.relay.mailchannels.net [23.83.221.22])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id 7epml1jp15oj8nv8qo07iofas00q7ui6npkf9ig1
+ for noc@planetlauritsen.com;
+ Wed, 17 Jun 2026 16:44:03 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of mauritiusholidayspackages.co.za designates 23.83.221.22 as permitted sender) client-ip=23.83.221.22; envelope-from=fazza@mauritiusholidayspackages.co.za; helo=bonobo.aspen.relay.mailchannels.net;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of mauritiusholidayspackages.co.za designates 23.83.221.22 as permitted sender) client-ip=23.83.221.22; envelope-from=fazza@mauritiusholidayspackages.co.za; helo=bonobo.aspen.relay.mailchannels.net;
+ dmarc=none header.from=mauritiusholidayspackages.co.za;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFIM1NKeVBNQlFPQ1Ywc1Q3UkhMMGxQUE00RjFSN3NydW00eFR2SXdlcXJlRzJCSStOaDdtYkZzY2JycGdDaFo2UE5jZGpsUWJReEtGM2FQbm1WcDg5anJlUUp1SDlrUlpiNytuV1FKTHhxRXV4ZE9ZR2JOWUZVSmdZM3pvbHlvbkQ4MHMrN0kvb0g2NGV5UjhFdDBGd25NeFV4RzBHSmIveTFvdXo3RnBHaDVGSnZPTkFFL1ZBSXZuN0g4b0JlK2VJQlR4NUtLclJycXNUcXdHc09Dam1UY1ZCYUh4STlJN0ZVc1Nwc2NWTW5GQjNoNStrNFVRYkk5WkY4NVRPUStLN2I2MVA4Nmg0UGJLMndyVUEyN2VmYW1FeUxoR1JXWCtaMjE3NVZ6RmNSaks1bklydnJISXBCSHVRYlpQOXdGUkE9
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=Sm0NkhyQPZ52L3+NZO5B65Mhkdi0Fg9/6rqclwLi+ClOo4ZdrbW6DF4XoIWvM0iK0+INlzQTqL/8vrPcSeKQA7PU4da9L2b/PXn4iwStSMHQKeeGbW2HEMK0JU1o3//pH3m2kepnYVxb+D9izB1QnL+aG0LOVwtaPXDMKCeIVqI=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1781714646; v=1; bh=IbmTjzyNYoFXAgZK4bX7YePieqCt2OxrOUj2S086LDM=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+X-Sender-Id: webafrica|x-authuser|fazza@mauritiusholidayspackages.co.za
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id B4A22402971;
+	Wed, 17 Jun 2026 16:44:01 +0000 (UTC)
+Received: from zxj38-cvps01.hostserv.co.za (trex-green-8.trex.outbound.svc.cluster.local [100.96.6.146])
+	(Authenticated sender: webafrica)
+	by relay.mailchannels.net (Postfix) with ESMTPA id BE44E403643;
+	Wed, 17 Jun 2026 16:43:31 +0000 (UTC)
+X-Sender-Id: webafrica|x-authuser|fazza@mauritiusholidayspackages.co.za
+X-MC-Relay: Junk
+X-MailChannels-SenderId:
+ webafrica|x-authuser|fazza@mauritiusholidayspackages.co.za
+X-MailChannels-Auth-Id: webafrica
+X-Minister-Macabre: 4bd5087d49ec1048_1781714641609_3414217799
+X-MC-Loop-Signature: 1781714641609:4078357336
+X-MC-Ingress-Time: 1781714641608
+Received: from zxj38-cvps01.hostserv.co.za (zxj38-cvps01.hostserv.co.za
+ [41.185.64.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.6.146 (trex/7.1.5);
+	Wed, 17 Jun 2026 16:44:01 +0000
+Received: from [127.0.0.1] (port=35858 helo=zxj38-cvps01.hostserv.co.za)
+	by zxj38-cvps01.hostserv.co.za with esmtpa (Exim 4.99.4)
+	(envelope-from <fazza@mauritiusholidayspackages.co.za>)
+	id 1wZtMH-0000000Av76-0XkH;
+	Wed, 17 Jun 2026 18:43:21 +0200
+MIME-Version: 1.0
+Date: Wed, 17 Jun 2026 18:43:13 +0200
+From: Fazza <fazza@mauritiusholidayspackages.co.za>
+To: undisclosed-recipients:;
+Subject: Re: Your Response is needed.
+Reply-To: fazza.din@outlook.com
+Mail-Reply-To: fazza.din@outlook.com
+User-Agent: Roundcube Webmail/1.6.16
+Message-ID: <143d92f36a32a162c1246ccb08ca2e40@mauritiusholidayspackages.co.za>
+X-Sender: fazza@mauritiusholidayspackages.co.za
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-AuthUser: fazza@mauritiusholidayspackages.co.za
+
+
+
+-- 
+Hello ,
+
+I hope you’re doing well. Just checking in in case you received my email 
+about the funds donated to you.
+
+I would really appreciate your quick response when you have a moment.
+
+Regards,
+
+Prince Fazza Bin Mohammed
+Dubai international humanitarian city foundation
