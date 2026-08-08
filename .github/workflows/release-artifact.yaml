@@ -1,0 +1,35 @@
+name: Build Release Artifact
+
+on:
+  release:
+    types:
+      - created
+
+permissions:
+  contents: read
+
+jobs:
+  build-release-artifact:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set Cargo package version from release tag
+        run: |
+          RELEASE_VERSION="${GITHUB_REF_NAME#v}"
+          sed -i -E "0,/^version = \".*\"/s//version = \"${RELEASE_VERSION}\"/" Cargo.toml
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jim_bridger-${{ github.ref_name }}-linux-amd64
+          path: target/release/jim_bridger
+          if-no-files-found: error
