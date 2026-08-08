@@ -1,0 +1,433 @@
+Return-Path: <3jVhHag4KCLQaiiafY-hilYjfsaiiafY.WigmbYlfchejfUhYnfUolcnmYh.Wig@scoutcamp.bounces.google.com>
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1
+ for sherlink@planetlauritsen.com;
+ Fri, 03 Jul 2026 06:37:02 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.128.197 as permitted sender) client-ip=209.85.128.197; envelope-from=3jVhHag4KCLQaiiafY-hilYjfsaiiafY.WigmbYlfchejfUhYnfUolcnmYh.Wig@scoutcamp.bounces.google.com; helo=mail-yw1-f197.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.128.197 as permitted sender) client-ip=209.85.128.197; envelope-from=3jVhHag4KCLQaiiafY-hilYjfsaiiafY.WigmbYlfchejfUhYnfUolcnmYh.Wig@scoutcamp.bounces.google.com; helo=mail-yw1-f197.google.com;
+ dkim=pass header.i=@google.com;
+ dmarc=pass header.from=google.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFHZGZLM2R2eCs3MTYvVHhXNXMzajVVeFkxRFMwaStFd0Q3TW16WWRTbGpBTnJkUSt3Yk1hNENhelVUbWxsTWpJaU0xQTVVc3VtR09rd0cxYXBPNjB3TnViNm4vaUFRTWF0TkVNNEZCVDRtQnR1V0R3ZytRM1ZvN0VrUUg3ZmtQemtFR3B3OHhrdlYzVmNJNG95am84NVgwbDhmYkpZcGpMTXRacFYxQSthYkNrc2tmdkRZN05QcXgxVnFWaURyVU1iNysxRCs1N3NCeVNVcm1xYXluWnB0M1k2R3d2SDJwRFZZd2xjOTRGV2MyZmludG15WGJZUlpkUG9wWmVDUzgxTnJZYjNNWTJmRnA1RlJoRU9wQUtmRGhIL1kyc05ablFnalJnS21BaEpVTnQvMTdZcVRGVGd2MXpGMWtNTVN4THo5TnJSQlBrSmpSRmtFUDUzeFJXRVNJR2p5czNqaXJpa0NsRUZEUTZHUWpKa2dCRlcyZGFaR2xPRjlZTmdNRUE0PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=e/BQKkA3uzHG0R9EPYwGlK2/AB5jVDHY5fhQUGtfTGxWOwvXtCaI5Et7DyLyHfQW7FnQgtw+AySZABpu5IjhJnkvsL0F5LKRojNfWqiHFSN6JjfSYoS2xpr+XyrZwAyj+CFtyJqYkiD9z3tgkYBT2xg/SwL9gifFFcIsHxoN9+c=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1783060622; v=1; bh=Ki0dNCgRIlYVTXz8w3oIS6JNkXTgqUQONX2YBT944IM=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-7f5b54da461so2868057b3.3
+        for <sherlink@planetlauritsen.com>; Thu, 02 Jul 2026 23:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783060621; x=1783665421; darn=planetlauritsen.com;
+        h=content-type:to:from:subject:message-id:gmsai:feedback-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ki0dNCgRIlYVTXz8w3oIS6JNkXTgqUQONX2YBT944IM=;
+        b=cON4olHirhBywwALse9RQs/SNK0XFhZt92ClTxeU1hmdB5HeP6hZi5Qo4I0HlUnNQ7
+         qgj4AhXYrFK1ZIuR6MPoARSwLZpZT5ZoKqa1GHH+8VSVHPNsIBpVG4cmuxssWsTkhTcK
+         nADLEd6pzyCol2VcmhzJGqddfS4JrUMC16sHuUMzkulwGv6lLnXckYlp+7gFVyXzP/bO
+         3aU8xYSUCghPyWLReyWhsWVrwyZn60kYsDcAAGEuu3Lt9GOCepuGqrzCPaAlfwf6YHWm
+         rt6SxHmxR6zoNcgVFX/lurbuDhsWwmcQY9snFm5jio8Tw/W+7hIxp426MiHVvPruY18F
+         x/uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783060621; x=1783665421;
+        h=content-type:to:from:subject:message-id:gmsai:feedback-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Ki0dNCgRIlYVTXz8w3oIS6JNkXTgqUQONX2YBT944IM=;
+        b=ZTgmpwEVkw83tOmt0hZ4WUuJLTHC/ThO+O7qCEnql3RxIjOWOxzeN6tgOEfLOGxs/+
+         AHeaMXt9NPC8QAv0HGZVoGSNZ2HxRZUf990qUWfeHZi8yYXbptIzjPwfkVyvlGWyDBpJ
+         ymrJtmfVlVbvdnQZji3NznIVJSND7d1G/YABOmd+Y2oGVCuuXXCzvvid+EueH9ScxSsR
+         YY2oSGvwWLPQESf/QNBzYTDq6Lh27BN6U4REFSqSKY5P0iOzHH6cYV8ISaCt7NiOLBmK
+         Hj1oQo9ngtEiosGNm+rq1ZigN2Vk7apupzuUn9QpiIU806H/IFAGjvsm0gKfk9y3utmz
+         Z1lA==
+X-Gm-Message-State: AOJu0Ywi++LzVOGZSuLPh7/BMpzsZYq6jdKDtMJfMZbeVsJR3QBo2KaM
+	rPPdPJRQ4eqr1Jbv5Gitr8Bum+2wF3bV7ONp+rcA43QCfPMR82cSpauQMEU=
+MIME-Version: 1.0
+X-Received: by 2002:a05:690c:7201:b0:80c:2874:67c5 with SMTP id
+ 00721157ae682-813848015f1mr88579027b3.42.1783060621856; Thu, 02 Jul 2026
+ 23:37:01 -0700 (PDT)
+Date: Thu, 02 Jul 2026 23:37:01 -0700
+Feedback-ID: P77029e45cd-0:C3847188797:M111232972-en:gamma
+gmsai: true
+X-Google-Notification-Metadata: CgISAA
+X-Notifications: 8e515736f74e0000
+X-Notifications-Bounce-Info: AShsMT9nZfvy-uS2F6tjuX4LjwuuNGCanHP-ifziX1-g_nfocDz_MDa40MhWz3VoiAy1OAwfhqvazZgXye46yzOSIzHGN3BDyVKiVMGBH5wVklGW3uFMlV0ba4pF6Oifa5ghM_is_53-Wcz3cLblToCpF7xZ5TV3yYNuN2qgoDQvXjISUL9ThlmbscquWSrAR1M8_Mb277TGW8Esl5mbE-wt71Rsat-20J6kIvTF0lBlFk1D_jZhOkupFClNHGoV4XfHuLYZMD_PZhSBXQaXsxfuO43RAeYW8XkZpDu-pkpcTlg4SS-yWUzdQaJQeXpn9BOwUhx1qbwhkVAoH9kgupKq-d4NqCtMPH8QgfAjKRrNrXOoJPHEWf3UDlr8ScYFn0QKFA_y2gTBuVqVTlvzyPCYdNzkPj5rCxUAbN99l8CaA1PD_fKhEnbSto8-G0MwhnUhyEfADGApq6R3TPKKHVPEV1FHRT09WNlELuG91VevUuQgZS81VXkQTzzRbBn8AsSGxgwtQVZXcbdsUkN2imuw_F2EOPDpV2JfJ74GzBXQN9OCHX5BFK-x1ra1owjXKqwmPG40sZtKmaCS8n82gueqNTxnX4DOO7QIhkPGYaCG8ddHKg9ONjAwNjA0MDQxNTM1NTk2OTMzMg
+Message-ID: <b2e5df883566f8514a5c51a70c5d90d756a47612-20400046-613148321@google.com>
+Subject: Learn more about our updated Terms of Service
+From: Google <google-noreply@google.com>
+To: sherlink@planetlauritsen.com
+Content-Type: multipart/alternative; boundary="000000000000fa8f190655af2677"
+
+--000000000000fa8f190655af2677
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
+
+c2hlcmxpbmtAcGxhbmV0bGF1cml0c2VuLmNvbQ0KDQpFdmVyeSBjb3VwbGUgb2YgeWVhcnMsIHdl
+IHVwZGF0ZSBvdXIgVGVybXMgb2YgU2VydmljZS4gV2Ugd2FudGVkIHRvIGxldCB5b3UgIA0Ka25v
+dyBhaGVhZCBvZiB0aW1lIHRoYXQgdGhlIG5leHQgdXBkYXRlIHdpbGwgYmUgb24gSnVseSAzMCwg
+MjAyNi4NCg0KVGhlc2UgY2hhbmdlcyB3b27igJl0IGFmZmVjdCB0aGUgd2F5IHlvdSB1c2Ugb3Vy
+ICANCjxodHRwczovL2MuZ2xlL0FPUHlES1JHZGhvYUxRRXF4YXdDWm9hYmFGd3lXMlVUcnV5WVZV
+bjF5LUVMOEd4Y1hOQkpCZV8taXlRYTdTbkVoaFY2X2gxVHdvRmZub3AtT3BjVUNPQ0NwOGczWmc4
+MEhkMW1PVU8wSFo5cUFNdDh0RGM5cWMyWExBLXBQOF9KaXJPb1cxRFFKRXUzb2R3R1JIZlg0Tk9p
+YkhYSkpGUy0xVzV5NW5RWHlqTnB0azVlYkVJOWp3S1RHSURweGZReUNjT2xTLVp0SnFIU21aWUNx
+YVhkSWtSQTNZbFRvSU0teFJHTmRtMnpCdjZrUGdBNFMxMkVjV0ppMURuS0NTTExZRjVhOUJKM290
+U0ttRDhJTHFFWFM1R0liWTFLTzllWWFZbz5zZXJ2aWNlcywgIA0KYnV0IHRoZXkgc2hvdWxkIGhl
+bHAgbWFrZSBpdCBlYXNpZXIgZm9yIHlvdSB0byB1bmRlcnN0YW5kIHdoYXQgdG8gZXhwZWN0ICAN
+CmZyb20gR29vZ2xlIOKAlCBhbmQgd2hhdCB3ZSBleHBlY3QgZnJvbSB5b3Ug4oCUIGFzIHlvdSB1
+c2Ugb3VyIHNlcnZpY2VzLg0KDQpZb3UgY2FuIHJldmlldyB0aGUgIA0KPGh0dHBzOi8vYy5nbGUv
+QU9QeURLUnRyTGZTejQ4QjAxQkx2amxhWDNiTy1iTGVWcEIyWm55ZjdoZmwzbUIxNGFMZU9IdjhC
+RUNrZV9qejBDUC1zT3JqRW5Lc0luVy1ocTJzcHhzYTFQQ2ZKZGU2UW9IdkFob0F0V2pLWWpNcHFC
+ZDZOa09fWF9zSXlOVTYwWENHN2FiWDRoNEFYNElIT25sbGR6ODVqVGNZQmtXbUVwN3JsTzJwVDA1
+NDRCRVB3ZG1yVWo2UXMyUGh1WkNON2NoX2FXTzZDcFJmaU51MWUyREg1SDQtWW95cHBHMWd1cUUw
+TDFoY3VHcFNodkpicVpxbDYteHRxVnhyWHpVSVg0NFlyYlBwdjhuRHpINFdFM3M3Z3c+bmV3ICAN
+CnRlcm1zIGhlcmUuIElmIHlvdeKAmXJlIGJhc2VkIGluIHRoZSBFdXJvcGVhbiBFY29ub21pYyBB
+cmVhIChFRUEpIG9yICANClN3aXR6ZXJsYW5kLCB3ZeKAmXZlIGFsc28gcHJvdmlkZWQgYSAgDQo8
+aHR0cHM6Ly9jLmdsZS9BT1B5REtUMGdrV1Q4QWtMY29QM2RhVVVJRDZlMUdzcndGQzI4RTBRVjNM
+dXV0akpJRTVZU2dHZXVNdTU5SE1iTEtrOUxZajFxVDZ6RHhxd1d2bmRoLWVmWVBZX2M1ZXZ0SWd6
+Q29ncEZDRDNGMDh3a3BVRFhYWDRiY3lmcUNKVUVrb0dhUDRYRmd1amtYMENjcnpFREN2SjQ0ZkI0
+bnJNNUc4ai1EVnJBU1ZuQVdGWGVzbFBoZUY3SV9yazA3T01zWDJQbDJRSGJDWGJwVnp1N2RVc1B0
+TVlHUXBRSzJoTE9pa3dYOG1GdXh5aFdYbThOZXE3WGtmV29IaWlaVEhlWTNiNm1nQUlqcExEbFIy
+aXlBakVMRlU+c3VtbWFyeSAgDQpvZiB0aGUga2V5IGNoYW5nZXMgdG8gdGhlIEVFQSB2ZXJzaW9u
+IG9mIG91ciB0ZXJtcy4NCg0KQXQgYSBnbGFuY2UsIGhlcmXigJlzIHdoYXQgdGhpcyB1cGRhdGUg
+bWVhbnMgZm9yIHlvdToNCg0KSW4gZ2VuZXJhbDoNCg0KV2UgYWRkZWQgYSBzZWN0aW9uIHRvIGhl
+bHAgeW91IGJldHRlciB1bmRlcnN0YW5kIHdoeSBvdXIgc2VydmljZXMgbWF5ICANCmFjY2VzcyB0
+aGUgaW50ZXJuZXQgd2hlbiBub3QgYWN0aXZlbHkgZW5nYWdlZCwgdG8gZW5jb3VyYWdlIHlvdSB0
+byBjaGVjayAgDQp5b3VyIEludGVybmV0IHNlcnZpY2UgcGxhbiBhbmQgeW91ciBkZXZpY2UgYW5k
+IG5ldHdvcmsgc2V0dGluZ3MsIGFzIGVhY2ggb2YgIA0KdGhvc2UgbWF5IGFmZmVjdCB5b3VyIGNv
+c3RzLg0KDQpXZSB1cGRhdGVkIGFuZCBjbGFyaWZpZWQgb3VyIFNldHRsaW5nIGRpc3B1dGVzLCBn
+b3Zlcm5pbmcgbGF3LCBhbmQgY291cnRzICANCnNlY3Rpb24uDQoNCldlIG1ha2UgaXQgY2xlYXJl
+ciBob3cgdmFyaW91cyBzZWN0aW9ucyBpbiBvdXIgdGVybXMgcmVsYXRlIHRvIGVhY2ggb3RoZXIu
+DQoNCklmIHlvdeKAmXJlIGJhc2VkIGluIHRoZSBFRUE6DQoNCkluIGFkZGl0aW9uIHRvIHRoZSBj
+aGFuZ2VzIGluIHRoZSBJbiBnZW5lcmFsIHNlY3Rpb24sIHdlIHVwZGF0ZWQgdmFyaW91cyAgDQpz
+ZWN0aW9ucyB0byByZWZsZWN0IHRoZSBsYXRlc3QgRUVBIGxhd3MgYW5kIHJlZ3VsYXRpb25zIHRo
+YXQgYXBwbHkgdG8gb3VyICANCnNlcnZpY2VzLCBpbmNsdWRpbmc6DQoNCkdvb2dsZeKAmXMgb2Js
+aWdhdGlvbiB0byBtYWtlIGxlZ2FsbHktcmVxdWlyZWQgdXBkYXRlcyB0byBvdXIgZGlnaXRhbCAg
+DQpjb250ZW50LCBzZXJ2aWNlcywgYW5kIGdvb2RzLg0KDQpBIG5ldywgb25saW5lIOKAnHdpdGhk
+cmF3YWwgYnV0dG9u4oCdIGluIHRoZSBFRUEgaW5zdHJ1Y3Rpb25zIG9uIHdpdGhkcmF3YWwgIA0K
+c2VjdGlvbi4NCg0KV2UgYWxzbyByZW1vdmVkIHRoZSBIYW5kbGluZyByZXF1ZXN0cyBmb3IgeW91
+ciBkYXRhIHNlY3Rpb24sIGJlY2F1c2Ugd2XigJlyZSAgDQpjZW50cmFsaXppbmcgb3VyIGRhdGEg
+ZGlzY2xvc3VyZSBsYW5ndWFnZSBvbiBvdXIgIA0KPGh0dHBzOi8vYy5nbGUvQU9QeURLUmM2bDN6
+MnI4LU5SMk5WQzdtRi1idVpuU2VUeEdVdmVXYjlvVEJwTzJ3WmhlS3VXZ3Y0dUlYMXlHU2RSc29W
+Z0dUcE1fRzZoZmxkQ1hYUjNmZHByU2hDWEVVd000OWZwTzVyRVNKWjQwc2hocUhyTndhSXpqRWlE
+MUd3ZGlHdi1iM29HZWdleDF6SE5PTEtvd2Q5N1c4a2ZHWElBalRrQzhMaDc2UDRwS3EtaHRjeFpO
+Z09RUWlRQUJIZnY3Ym8zTjFGektNXzdwb2k3OVRYZ1NXMFpfR0JERktFWGtSemo4eVdRVGhOSkJK
+SWtGU093Tl83a1hZYXNlTVBrb0dXbWl1cW8xTkVPeU02bUdqVTRxRWtvSWxlQm1DMTRwX3k1Mmw+
+bWFpbiAgDQpkYXRhIGRpc2Nsb3N1cmUgcG9saWN5IHBhZ2UuDQoNCklmIHlvdeKAmXJlIGJhc2Vk
+IG91dHNpZGUgdGhlIEVFQToNCg0KSW4gYWRkaXRpb24gdG8gdGhlIGNoYW5nZXMgaW4gdGhlIElu
+IGdlbmVyYWwgc2VjdGlvbiwgd2UgYWRkZWQgbmV3ICANCmRpc2Nsb3N1cmVzIGFuZCBkaXNjbGFp
+bWVycywgaW5jbHVkaW5nIG9uZXMgYWJvdXQgQUkgb3V0cHV0cy4NCg0KSWYgeW914oCZcmUgYmFz
+ZWQgaW4gSW5kaWEsIHdlIGFsc28gYWRkZWQgbmV3IHJlcG9ydGluZyBsYW5ndWFnZSBhYm91dCBv
+dXIgIA0Kb2JsaWdhdGlvbnMgaWYgeW91IHZpb2xhdGUgYXBwbGljYWJsZSBsYXcuDQoNCklmIHlv
+deKAmXJlIGEgcGFyZW50IG9yIGd1YXJkaWFuLCBhbmQgeW91IGFsbG93IHlvdXIgY2hpbGQgdG8g
+dXNlIHRoZSAgDQpzZXJ2aWNlcywgcGxlYXNlIHJldmlldyB0aGUgdXBkYXRlcyB0byBvdXIgdGVy
+bXMgd2l0aCB5b3VyIGNoaWxkIGFuZCBoZWxwICANCnRoZW0gZGVjaWRlIHdoZXRoZXIgdGhleSBu
+ZWVkIHRvIG1ha2UgYW55IGNoYW5nZXMgdG8gdGhlaXIgYWNjb3VudC4gUGxlYXNlICANCnJlbWVt
+YmVyIHRoYXQgdGhlc2UgdGVybXMgYXBwbHkgdG8geW91IGFuZCB5b3XigJlyZSByZXNwb25zaWJs
+ZSBmb3IgeW91ciAgDQpjaGlsZOKAmXMgYWN0aXZpdHkgb24gdGhlIHNlcnZpY2VzLg0KDQpJZiB5
+b3UgZG9u4oCZdCBhZ3JlZSB0byB0aGUgbmV3IHRlcm1zLCB5b3Ugc2hvdWxkIHJlbW92ZSAgDQo8
+aHR0cHM6Ly9jLmdsZS9BT1B5REtTYVpramE2Yk9nOF81VXVBd2R5QzF3TXYzMGZpR3MwNWctY1V2
+MEFsdUlaMXd5VXpaQnVYb0RXRmxPQWJJNkl5S1ZjdTNJd2NLRkc3d2VqWndxVFZSX2podGg1cHFa
+MHZpeVlIZG1oaUV3Nmt6SFNUdkZvUDlMRzhUU05weW0xZVBENGRFZGQ5V2o3MUMtaXFoRklkNHJp
+SDl1V0hPcEdScDBNbll2c2trSTc1ZmxkUC1HS2NUY1ZjUUxvVGF4ZWVWYTVGRmR0WHc3V3RFV2Q2
+aVczS2xTYzZPdnFSd1ZhZnI5YV94bmstSXBkVXVqN1ExMlNXQzBfTVNvVm51UnZlOThid21mMkdS
+QjBEVGZpTzlERkk2ZzZvRVE4S3NmUUNpamg2UTZNckZzQVVXNmZnOV90Y3JHS3c+eW91ciAgDQpj
+b250ZW50IGFuZCBzdG9wIHVzaW5nIHRoZSBzZXJ2aWNlcy4gWW91IGNhbiBhbHNvIGVuZCB5b3Vy
+IHJlbGF0aW9uc2hpcCAgDQp3aXRoIHVzIGF0IGFueSB0aW1lLCB3aXRob3V0IHBlbmFsdHksIGJ5
+ICANCjxodHRwczovL2MuZ2xlL0FPUHlES1JmaTdCN2gxYXlJeXNtTTVtc2NIaGdjbEVhcU8zQ2ZQ
+aDNIT3dHSW9UcHJPNWcyZk5MMWMyT3QzYlowbEZvd2xiLVRrNWFmSWtSLVlOaVRzTUM4cjY3ZGxZ
+TmF5NHJla1pNMDkxUi1LaEVfSWx5YzVTZU1KTUVNQzJHX0VicW1SRmhHVUNyOHVpWmxueFJUQzhf
+SnpJWk00LU5raWp2WjFaWnFOdGFod0c1cGJLYVh6RndFaVR4bTdVdE5iODVmQXJvTWwxQktIMlp3
+TTZSMjR4Y1VWZWlRTnNCczZGMDVKU2xJcnF1QTJUZGJwM3pWaTYzdmhDb2FIcThyQS1FRm8xZFZy
+eEt1el8yZUIwWERxSDEtdFFqSFJBRWxOaz5jbG9zaW5nICANCnlvdXIgR29vZ2xlIEFjY291bnQu
+DQoNClRoYW5rIHlvdSBmb3IgdXNpbmcgR29vZ2xlIHNlcnZpY2VzIQ0KDQrCqSAyMDI2IEdvb2ds
+ZSBMTEMgMTYwMCBBbXBoaXRoZWF0cmUgUGFya3dheSwgTW91bnRhaW4gVmlldywgQ0EgOTQwNDMN
+Cg0KWW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCB0byB1cGRhdGUgeW91IGFib3V0IGltcG9y
+dGFudCBjaGFuZ2VzIHRvICANCkdvb2dsZeKAmXMgVGVybXMgb2YgU2VydmljZS4NCg==
+--000000000000fa8f190655af2677
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html xmlns:v=3Durn:schemas-microsoft-com:vml xmlns:o=3Durn:=
+schemas-microsoft-com:office:office lang=3Den><head>
+<title></title><meta http-equiv=3DContent-Type content=3D"text/html; charse=
+t=3Dutf-8"><meta name=3Dviewport content=3Dwidth=3Ddevice-width,initial-sca=
+le=3D1><!--[if mso]>
+<xml><w:WordDocument xmlns:w=3D"urn:schemas-microsoft-com:office:word"><w:D=
+ontUseAdvancedTypographyReadingMail/></w:WordDocument>
+<o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/=
+></o:OfficeDocumentSettings></xml>
+<![endif]--><!--[if !mso]><!--><link href=3Dhttps://fonts.googleapis.com/cs=
+s?family=3DRoboto:400,500,600,700;display=3Dswap rel=3Dstylesheet type=3Dte=
+xt/css><link href=3Dhttps://fonts.googleapis.com/css?family=3DGoogle+Sans+T=
+ext:400,500,700%7CRoboto:400,500,700;display=3Dswap rel=3Dstylesheet type=
+=3Dtext/css><link href=3Dhttps://fonts.googleapis.com/css?family=3DGoogle+S=
+ans:400,500,600,700%7CRoboto:400,500,600,700;display=3Dswap rel=3Dstyleshee=
+t type=3Dtext/css><!--<![endif]--><style>
+*{box-sizing:border-box}body{margin:0;padding:0}a[x-apple-data-detectors]{c=
+olor:inherit!important;text-decoration:inherit!important}#MessageViewBody a=
+{color:inherit;text-decoration:none}p{line-height:inherit}.desktop_hide,.de=
+sktop_hide table{mso-hide:all;display:none;max-height:0;overflow:hidden}.im=
+age_block img+div{display:none}sub,sup{font-size:75%;line-height:0}#convert=
+ed-body .list_block ol,#converted-body .list_block ul,.body [class~=3Dx_lis=
+t_block] ol,.body [class~=3Dx_list_block] ul,u+.body .list_block ol,u+.body=
+ .list_block ul{padding-left:20px} @media (max-width:590px){.mobile_hide{di=
+splay:none}.row-content{width:100%!important}.stack .column{width:100%;disp=
+lay:block}.mobile_hide{min-height:0;max-height:0;max-width:0;overflow:hidde=
+n;font-size:0}.desktop_hide,.desktop_hide table{display:table!important;max=
+-height:none!important}.row-1 .column-1 .block-1.image_block td.pad{padding=
+:0 0 0 15px!important}}
+</style><!--[if mso ]><style>sup, sub { font-size: 100% !important; } sup {=
+ mso-text-raise:10% } sub { mso-text-raise:-10% }</style> <![endif]--></hea=
+d><body dir=3Dltr class=3Dbody style=3Dbackground-color:#fafafa;margin:0;pa=
+dding:0;-webkit-text-size-adjust:none;text-size-adjust:none><table class=3D=
+nl-container width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=
+=3Dpresentation style=3Dmso-table-lspace:0;mso-table-rspace:0;background-co=
+lor:#fafafa><tbody><tr><td><table class=3D"row row-1" align=3Dcenter width=
+=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dpresentation styl=
+e=3Dmso-table-lspace:0;mso-table-rspace:0><tbody><tr><td><table class=3Drow=
+-content align=3Dcenter border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dp=
+resentation style=3D"mso-table-lspace:0;mso-table-rspace:0;border-radius:0;=
+color:#000;width:570px;margin:0 auto" width=3D570><tbody><tr><td class=3D"c=
+olumn column-1" width=3D50% style=3Dmso-table-lspace:0;mso-table-rspace:0;f=
+ont-weight:400;text-align:left;padding-bottom:20px;padding-left:35px;paddin=
+g-right:35px;padding-top:20px;vertical-align:middle><table class=3D"image_b=
+lock block-1" width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=
+=3Dpresentation style=3Dmso-table-lspace:0;mso-table-rspace:0><tr><td class=
+=3Dpad style=3Dwidth:100%;padding-right:0;padding-left:0><div class=3Dalign=
+ment align=3Dleft><div style=3Dmax-width:75.25px><img src=3Dhttps://ci3.goo=
+gleusercontent.com/meips/ADKq_Na_BBdWw4xSS1_7W0tRI-DubxDZ-zMFzjRzsAmvUiqb-6=
+gL7Jet5x7E0yEggz3waGJpU7WGwrwsKD6WnXyjJDfHE6ceVQ6TY7Dknt9OK4MdcewBpTNfNIxYz=
+J_R=3Ds0-d-e1-ft#http://services.google.com/fh/files/emails/updated_google_=
+logo_new.png style=3Ddisplay:block;height:auto;border:0;width:100% width=3D=
+75.25 alt title height=3Dauto></div></div></td></tr></table></td><td class=
+=3D"column column-2" width=3D50% style=3Dmso-table-lspace:0;mso-table-rspac=
+e:0;font-weight:400;text-align:left;padding-bottom:5px;padding-top:5px;vert=
+ical-align:middle><table class=3D"paragraph_block block-1" width=3D100% bor=
+der=3D0 cellpadding=3D10 cellspacing=3D0 role=3Dpresentation style=3Dmso-ta=
+ble-lspace:0;mso-table-rspace:0;word-break:break-word><tr><td class=3Dpad><=
+div style=3D"color:#5f6368;direction:ltr;font-family:&#39;Google Sans Text&=
+#39;,Roboto,arial,sans-serif;font-size:14px;font-weight:400;letter-spacing:=
+0;line-height:1.2;text-align:right;mso-line-height-alt:17px"><p style=3Dmar=
+gin:0>sherlink@planetlauritsen.com=C2=A0</p></div></td></tr></table></td></=
+tr></tbody></table></td></tr></tbody></table><table class=3D"row row-2" ali=
+gn=3Dcenter width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3D=
+presentation style=3Dmso-table-lspace:0;mso-table-rspace:0><tbody><tr><td><=
+table class=3D"row-content stack" align=3Dcenter border=3D0 cellpadding=3D0=
+ cellspacing=3D0 role=3Dpresentation style=3D"mso-table-lspace:0;mso-table-=
+rspace:0;background-color:#fff;color:#000;width:570px;margin:0 auto" width=
+=3D570><tbody><tr><td class=3D"column column-1" width=3D100% style=3Dmso-ta=
+ble-lspace:0;mso-table-rspace:0;font-weight:400;text-align:left;padding-bot=
+tom:5px;padding-top:5px;vertical-align:top><table class=3D"image_block bloc=
+k-1" width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dpresent=
+ation style=3Dmso-table-lspace:0;mso-table-rspace:0><tr><td class=3Dpad sty=
+le=3Dpadding-left:35px;padding-right:35px;padding-top:35px;width:100%><div =
+class=3Dalignment align=3Dcenter><div style=3Dmax-width:257px><img src=3Dht=
+tps://ci3.googleusercontent.com/meips/ADKq_Naedd9O5dZbKgg_VRWev0iVRw5A_EL23=
+lSD0qHYIbzD6pPnIs0Ai0cJ54Fi_2fTkgOl3YQSZWL30kw3Wg8R5J0DMOfabuh7EfOe42pS0bQl=
+PT2QpRpYKQNI6ii47FoiY8TQboIVxzeJ7p7-YldAya7DR5eOmXG5Wrk6xaELjg=3Ds0-d-e1-ft=
+#https://www.gstatic.com/identity/boq/policies/msa/utos_illustration-d3cb2a=
+71970d5e9daf2e78a2ee367789.png style=3Ddisplay:block;height:auto;border:0;w=
+idth:100% width=3D257 alt title height=3Dauto></div></div></td></tr></table=
+><table class=3D"paragraph_block block-2" width=3D100% border=3D0 cellpaddi=
+ng=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-lspace:0;mso-t=
+able-rspace:0;word-break:break-word><tr><td class=3Dpad style=3Dpadding-bot=
+tom:12px;padding-left:35px;padding-right:35px;padding-top:25px><div style=
+=3D"color:#3c4043;direction:ltr;font-family:&#39;Google Sans Text&#39;,Robo=
+to,arial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;line-he=
+ight:1.5;text-align:left;mso-line-height-alt:21px"><p style=3Dmargin:0>
+Every couple of years, we update our <strong>Terms of Service</strong>. We =
+wanted to let you know ahead of time that the next update will be on <stron=
+g>July 30, 2026</strong>.</p></div></td></tr></table><table class=3D"paragr=
+aph_block block-3" width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 =
+role=3Dpresentation style=3Dmso-table-lspace:0;mso-table-rspace:0;word-brea=
+k:break-word><tr><td class=3Dpad style=3Dpadding-bottom:12px;padding-left:3=
+5px;padding-right:35px;padding-top:25px><div style=3D"color:#3c4043;directi=
+on:ltr;font-family:&#39;Google Sans Text&#39;,Roboto,arial,sans-serif;font-=
+size:14px;font-weight:400;letter-spacing:0;line-height:1.5;text-align:left;=
+mso-line-height-alt:21px"><p style=3Dmargin:0>
+These changes won=E2=80=99t affect the way you use our <a href=3Dhttps://c.=
+gle/AOPyDKQ0khECC98sJc5SbwbkOJojRxM1jr_Lc-OrxWd44QUGGO3Y2-aiJFhpQ09ovEyMCMk=
+LXRkBuslfqGOk7dn1WmjYjk6MERGvgB_iL1mU5PUClI1kv2C8TTMstdEtjfIWQpjeZ42nrn03SS=
+-IkhEbm-flUhRg0W-6p6QdKXMMjlx01QC-C4Wlg5ZzCoYDZLzk7mDmJJDL7cu7b7bw3w8fcSrQ3=
+bfSLEBIaWkViBOYSdsHx8YtsMkKrowF2Qqzi1Bs0kUztc4iXZvdOsfHh8uNOjJ9WwxvnY0cBHrU=
+RysZriinwGaRzXezovhkfMeziZx6-ffHcAU3MWayD6clBJfCW5QFEgQO3HS39KBI6NnlRhP0FZn=
+4FgMC9xiRhTPBDm4kVFycEM9xY_poFqsEIjQP69Zb4ckX0sbk9_fvfZMhyDD3PyR7Dtaj-enXNn=
+9FdFlSubSOyAnkwoB3tmJT1jU1QQgbQz_MCxB-SNY target=3D_self style=3D"text-deco=
+ration: underline; color: #1967d2;">services</a>, but they should help make=
+ it easier for you to understand what to expect from Google =E2=80=94 and w=
+hat we expect from you =E2=80=94 as you use our services.</p></div></td></t=
+r></table><table class=3D"paragraph_block block-4" width=3D100% border=3D0 =
+cellpadding=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-lspac=
+e:0;mso-table-rspace:0;word-break:break-word><tr><td class=3Dpad style=3Dpa=
+dding-bottom:12px;padding-left:35px;padding-right:35px;padding-top:25px><di=
+v style=3D"color:#3c4043;direction:ltr;font-family:&#39;Google Sans Text&#3=
+9;,Roboto,arial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;=
+line-height:1.5;text-align:left;mso-line-height-alt:21px"><p style=3Dmargin=
+:0>
+You can review the <a href=3Dhttps://c.gle/AOPyDKSZE6YY1KZQEcXpGDQTs_pJwknm=
+2uONbzSuKgWFtm76K6zKT2R0UY4HoIyWxlM2V26uSXmfetIaP9O8D7puZ7y2lVOFiGbz_vDQx6w=
+sVnwrc2OABNG05PWwJ_k5b8Zbqd7gteuRb9aSMfrro84uachr-o2FarNeKdxSwfkwCwCUtvlHAB=
+IUnGtHW-xZTB-5nc7BZfVmKB1eJPadmfcOVfn9C9JULvpxTSfpFT4QVFqNj_6aWwd19im6IEHI6=
+2DKYA-PmOFrIecXpSWlDQgK8QuKUMWE1uCqLOLrkFrYy7exY4Yd97c9ofBh_znhiYxUQRF_RFnU=
+qqQImEndftTfWDUbx1NALKXt3PqJEKmUpQkx2I8ITrD0IxaH5X_nbckmgYfCQhj1p8IYD-EAuax=
+AS2avoJdSoO0sHGLuoqYEizUDb3fHA68qYQ_-XN_F3WVNsH__XZBe target=3D_self style=
+=3D"text-decoration: underline; color: #1967d2;">new terms here</a>. If you=
+=E2=80=99re based in the European Economic Area (EEA) or Switzerland, we=E2=
+=80=99ve also provided a <a href=3Dhttps://c.gle/AOPyDKRE0NxzMBKXahZ8cs5BKI=
+TiKDzFalh5EH96_fIo-LOlbW-AfArwJP_l7M3xzB5RIVWoLPZKcrKdYlmDlShk61ZZavLWYPfB8=
+DojIq2T9yI3B7_AWIGHzAhmdmSaRWqoPpwyBuvJR-g2kwuV9Pvlmt8yU-eWnVMl5hm4oKKa9lMl=
+WJN_FMclFh-fZyRNNZfrUNKjaj8oWYZzzaCAyOBUCdgSF-JqNtsWsEaHmn1e3e0AyhMDbCNI5Gs=
+plRc2yFRpQl1zoukZKt5cgh6vdouADxEaQOtNC0_cmcVG2_6fYeIAjir3U3sOK7-SzOami3_eYY=
+T-rnJrg8tB_pOOwfCV_MshctCc-4E85fVRXA_DBMZJbX7WnwEqDOfOyWucJflniMg1ONpMymmfh=
+foRNxprfwHhaJCe2fgyDIfZY24EQGMN7-dGUuKkEkcCX-DzAhVdNIKrFX6fC-E target=3D_se=
+lf style=3D"text-decoration: underline; color: #1967d2;">summary of the key=
+ changes to the EEA version of our terms</a>.</p></div></td></tr></table><t=
+able class=3D"paragraph_block block-5" width=3D100% border=3D0 cellpadding=
+=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-lspace:0;mso-tab=
+le-rspace:0;word-break:break-word><tr><td class=3Dpad style=3Dpadding-botto=
+m:12px;padding-left:35px;padding-right:35px;padding-top:25px><div style=3D"=
+color:#3c4043;direction:ltr;font-family:&#39;Google Sans Text&#39;,Roboto,a=
+rial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;line-height=
+:1.5;text-align:left;mso-line-height-alt:21px"><p style=3Dmargin:0>
+At a glance, here=E2=80=99s what this update means for you:</p></div></td><=
+/tr></table><table class=3D"list_block block-6" width=3D100% border=3D0 cel=
+lpadding=3D0 cellspacing=3D0 role=3Dpresentation style=3D"mso-table-lspace:=
+0;mso-table-rspace:0;word-break:break-word;color:#3c4043;direction:ltr;font=
+-family:&#39;Google Sans Text&#39;,Roboto,arial,sans-serif;font-size:14px;f=
+ont-weight:400;letter-spacing:0;line-height:1.5;text-align:left;mso-line-he=
+ight-alt:21px"><tr><td class=3Dpad style=3Dpadding-bottom:12px;padding-left=
+:35px;padding-right:35px;padding-top:12px><div style=3Dmargin-left:-20px><u=
+l start=3D1 style=3Dmargin-top:0;margin-bottom:0;list-style-type:revert><li=
+ aria-level=3D1 style=3DMargin:0><strong>In general: </strong><div style=3D=
+margin-left:0><ul style=3Dmargin-top:0;margin-bottom:0;list-style-type:reve=
+rt><li aria-level=3D2 style=3DMargin:0>
+We added a section to help you better understand why our services may acces=
+s the internet when not actively engaged, to encourage you to check your In=
+ternet service plan and your device and network settings, as each of those =
+may affect your costs.</li><li aria-level=3D2 style=3DMargin:0>We updated a=
+nd clarified our <em>Settling disputes, governing law, and courts</em> sect=
+ion.</li><li aria-level=3D2 style=3DMargin:0>We make it clearer how various=
+ sections in our terms relate to each other.</li>
+</ul></div></li><li aria-level=3D2 style=3DMargin:0><strong>If you=E2=80=99=
+re based in the EEA:</strong><div style=3Dmargin-left:0><ul style=3Dmargin-=
+top:0;margin-bottom:0;list-style-type:revert><li aria-level=3D2 style=3DMar=
+gin:0>In addition to the changes in the <em>In general</em> section, we upd=
+ated various sections to reflect the latest EEA laws and regulations that a=
+pply to our services, including:<br><div style=3Dmargin-left:0><ul style=3D=
+margin-top:0;margin-bottom:0;list-style-type:revert><li aria-level=3D3 styl=
+e=3DMargin:0>Google=E2=80=99s obligation to make legally-required updates t=
+o our digital content, services, and goods.</li><li aria-level=3D3 style=3D=
+Margin:0>A new, online =E2=80=9Cwithdrawal button=E2=80=9D in the <em>EEA i=
+nstructions on withdrawal </em>section.</li></ul></div></li><li aria-level=
+=3D2 style=3DMargin:0>
+We also removed the <em>Handling requests for your data</em> section, becau=
+se we=E2=80=99re centralizing our data disclosure language on our <a href=
+=3Dhttps://c.gle/AOPyDKSqiBgMyEmWVLMN9A84X6gn5S-DXtvwNTi8A6uOC0LN9UoNq2Mz8U=
+sUtFyuskDBx1pNtWpk0cb3ptUDKruTjpC2MD-09O3p_PxX83lua8ZSzW0PK9tw7lCzpXOtd3RN7=
+Z9N2kz61j9vcaJQPxgqV-rDi52O5afG9reVPrPvuL1qDiZolU0mUTZ6bXLl3pkgpDL9vYBI1wMl=
+N1-G1TSVmluVfy0HBtoMdgq5LW0L89nYqMvz-Y0HRWWngYZGiBdeC6Jy2Q_a5hR88HKWS0KKQpJ=
+totXla637jAtK7RKRUAus-I46hhsEVqdM5bNFuxrmaLNWcgz-ZKB0rHO7wbt1rADhbz407-vr34=
+OuUCRG3Kl8yjYESIp5DVPKyS6MtnUG7K1eP5kzAowhCEpxpJMCR4J-uxzGihJpczC-N2I1BxwI2=
+92urrL3hEf80nEnrGqhpwMUfahHemNErAaESblhVBxaw8_f5ns4Wwf2_WiUIcHTpQ target=3D=
+_self data-mce-attributes-count=3D1 style=3D"text-decoration: underline; co=
+lor: #1967d2;">main data disclosure policy page</a>.<a href=3Dhttps://c.gle=
+/AOPyDKSqiBgMyEmWVLMN9A84X6gn5S-DXtvwNTi8A6uOC0LN9UoNq2Mz8UsUtFyuskDBx1pNtW=
+pk0cb3ptUDKruTjpC2MD-09O3p_PxX83lua8ZSzW0PK9tw7lCzpXOtd3RN7Z9N2kz61j9vcaJQP=
+xgqV-rDi52O5afG9reVPrPvuL1qDiZolU0mUTZ6bXLl3pkgpDL9vYBI1wMlN1-G1TSVmluVfy0H=
+BtoMdgq5LW0L89nYqMvz-Y0HRWWngYZGiBdeC6Jy2Q_a5hR88HKWS0KKQpJtotXla637jAtK7RK=
+RUAus-I46hhsEVqdM5bNFuxrmaLNWcgz-ZKB0rHO7wbt1rADhbz407-vr34OuUCRG3Kl8yjYESI=
+p5DVPKyS6MtnUG7K1eP5kzAowhCEpxpJMCR4J-uxzGihJpczC-N2I1BxwI292urrL3hEf80nEnr=
+GqhpwMUfahHemNErAaESblhVBxaw8_f5ns4Wwf2_WiUIcHTpQ target=3D_self data-mce-a=
+ttributes-count=3D1 style=3D"text-decoration: underline; color: #1967d2;"><=
+/a></li>
+</ul></div></li><li aria-level=3D1 style=3DMargin:0><strong>If you=E2=80=99=
+re based outside the EEA:=C2=A0</strong><div style=3Dmargin-left:0><ul styl=
+e=3Dmargin-top:0;margin-bottom:0;list-style-type:revert><li aria-level=3D2 =
+style=3DMargin:0>In addition to the changes in the <em>In general</em> sect=
+ion, we added new disclosures and disclaimers, including ones about AI outp=
+uts.</li><li aria-level=3D2 style=3DMargin:0>
+If you=E2=80=99re based in India, we also added new reporting language abou=
+t our obligations if you violate applicable law.</li></ul></div></li></ul><=
+/div></td></tr></table><table class=3D"paragraph_block block-7" width=3D100=
+% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dpresentation style=3Dms=
+o-table-lspace:0;mso-table-rspace:0;word-break:break-word><tr><td class=3Dp=
+ad style=3Dpadding-bottom:12px;padding-left:35px;padding-right:35px;padding=
+-top:25px><div style=3D"color:#3c4043;direction:ltr;font-family:&#39;Google=
+ Sans Text&#39;,Roboto,arial,sans-serif;font-size:14px;font-weight:400;lett=
+er-spacing:0;line-height:1.5;text-align:left;mso-line-height-alt:21px"><p s=
+tyle=3Dmargin:0>
+If you=E2=80=99re a parent or guardian, and you allow your child to use the=
+ services, please review the updates to our terms with your child and help =
+them decide whether they need to make any changes to their account. Please =
+remember that these terms apply to you and you=E2=80=99re responsible for y=
+our child=E2=80=99s activity on the services.</p></div></td></tr></table><t=
+able class=3D"paragraph_block block-8" width=3D100% border=3D0 cellpadding=
+=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-lspace:0;mso-tab=
+le-rspace:0;word-break:break-word><tr><td class=3Dpad style=3Dpadding-botto=
+m:12px;padding-left:35px;padding-right:35px;padding-top:25px><div style=3D"=
+color:#3c4043;direction:ltr;font-family:&#39;Google Sans Text&#39;,Roboto,a=
+rial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;line-height=
+:1.5;text-align:left;mso-line-height-alt:21px"><p style=3Dmargin:0>
+If you don=E2=80=99t agree to the new terms, you should remove <a href=3Dht=
+tps://c.gle/AOPyDKSXfHkQAhtVXUueBvgsg-Tao9YiMKvZg9PT4aPeJBO2JSkvnaKOCVkKET8=
+CfKDrLXxtrY7qF7TRtvt5mYPzDLsExMpJOTZD2Y7cHTBm4vTUtY1EK_hXdJlv_OfUbZxz6KRFhu=
+5NGYaQL799JMPQNN_466cSQtSw9O9vuXZ4bisuaIKiCrlispgguK7p28mJE7RswK4R_sqFqjsVq=
+rv4UZpkh5nyJMplzYLX9KNxXADS7P0Y0ernqwhX8wLpFjNYqzdHLnVCFrbRvLvQvBonATZIQWk0=
+t5Pmr-kwBuKxPNqfJuOfA_jV6GWwUspeBHPu_N0n6WLnQ8EASjLhhDptdOwcgK5ZZcHF217z21q=
+3FE_8X9RKaxDmcFNM_zy9y1OZ6IS9iTLA4df0LwF7tdTv0t4IoDGGv4kjJkO0Ou_JdD89lXpilA=
+hRTpBCA1GZUaOd1r9IkRWgvAd83DYi7ycn67Eb5ey-uiGXuvzq5-2HSbKZt3sqkQzLjWatJMXUa=
+b1K6T4H7_rDPfKoBgTQJAxmwGch target=3D_self style=3D"text-decoration: underl=
+ine; color: #1967d2;">your content</a> and stop using the services. You can=
+ also end your relationship with us at any time, without penalty, by <a hre=
+f=3Dhttps://c.gle/AOPyDKT_Q3aaOhUzNF-Y3rDgTMP8Is9PPa_39v8N6o-MRR0opTXzbmtyR=
+0q4FwcMut17u3Tbk_orioixnllF_UeKiFeJ8-w27OXF5EiJ4X_wiOhQcaKRXJQ2AU7R5Fux8udd=
+pIqkpZtsclbZayQ3mDB6O7ddC1OrqAaiwYa1kHr7VeVf-FIzl7P4Yb5sT1jCi5nENFMznHOoc_8=
+_eVXNSLUuDnzZ8GydlD2vRRkm6oPXji-X9xtRTmKrLi9ImRKakDQ5MLjen6MpknAf_Y_8N6GFlY=
+rrgcSsHdIKj3vvXXI1YZFY3fRUVF96VYmbh_7mdxc1BC_1TfmOWTKpgaElwXEWxrR7VPhY95ZM1=
+UGvt_LWfcJRhGJ_XFHQSeQdTq5LT3CWcPWk-mL7sYyaFnPUyAbIqKwJlkdl1ydRxYjtfnX7_YzY=
+Se6AF2jgH5ZmIUw8tj5qpAVBnRk9HKChbOt54bEGQQGj-2mbOVWlQc8 target=3D_self styl=
+e=3D"text-decoration: underline; color: #1967d2;">closing your Google Accou=
+nt</a>.</p></div></td></tr></table>
+<table class=3D"paragraph_block block-9" width=3D100% border=3D0 cellpaddin=
+g=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-lspace:0;mso-ta=
+ble-rspace:0;word-break:break-word><tr><td class=3Dpad style=3Dpadding-bott=
+om:60px;padding-left:35px;padding-right:35px;padding-top:12px><div style=3D=
+"color:#3c4043;direction:ltr;font-family:&#39;Google Sans Text&#39;,Roboto,=
+arial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;line-heigh=
+t:1.5;text-align:left;mso-line-height-alt:21px"><p style=3Dmargin:0>Thank y=
+ou for using Google services!=C2=A0</p></div></td></tr></table></td></tr></=
+tbody></table></td></tr></tbody></table><table class=3D"row row-3" align=3D=
+center width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dprese=
+ntation style=3Dmso-table-lspace:0;mso-table-rspace:0><tbody><tr><td><table=
+ class=3D"row-content stack" align=3Dcenter border=3D0 cellpadding=3D0 cell=
+spacing=3D0 role=3Dpresentation style=3D"mso-table-lspace:0;mso-table-rspac=
+e:0;border-radius:0;color:#000;width:570px;margin:0 auto" width=3D570><tbod=
+y><tr><td class=3D"column column-1" width=3D100% style=3Dmso-table-lspace:0=
+;mso-table-rspace:0;font-weight:400;text-align:left;padding-bottom:40px;pad=
+ding-left:35px;padding-right:35px;padding-top:40px;vertical-align:top><tabl=
+e class=3D"image_block block-1" width=3D100% border=3D0 cellpadding=3D0 cel=
+lspacing=3D0 role=3Dpresentation style=3Dmso-table-lspace:0;mso-table-rspac=
+e:0><tr><td class=3Dpad style=3Dwidth:100%;padding-right:0;padding-left:0><=
+div class=3Dalignment align=3Dleft><div style=3Dmax-width:100px><img src=3D=
+https://ci3.googleusercontent.com/meips/ADKq_Na_BBdWw4xSS1_7W0tRI-DubxDZ-zM=
+FzjRzsAmvUiqb-6gL7Jet5x7E0yEggz3waGJpU7WGwrwsKD6WnXyjJDfHE6ceVQ6TY7Dknt9OK4=
+MdcewBpTNfNIxYzJ_R=3Ds0-d-e1-ft#http://services.google.com/fh/files/emails/=
+updated_google_logo_new.png style=3Ddisplay:block;height:auto;border:0;widt=
+h:100% width=3D100 alt title height=3Dauto></div></div></td>
+</tr></table><table class=3D"paragraph_block block-2" width=3D100% border=
+=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dpresentation style=3Dmso-table-=
+lspace:0;mso-table-rspace:0;word-break:break-word><tr><td class=3Dpad style=
+=3Dpadding-top:25px><div style=3D"color:#5f6368;direction:ltr;font-family:&=
+#39;Google Sans Text&#39;,Roboto,arial,sans-serif;font-size:14px;font-weigh=
+t:400;letter-spacing:0;line-height:1.2;text-align:left;mso-line-height-alt:=
+17px"><p style=3Dmargin:0>
+=C2=A9 2026 Google LLC 1600 Amphitheatre Parkway, Mountain View, CA 94043=
+=C2=A0</p></div></td></tr></table><table class=3D"paragraph_block block-3" =
+width=3D100% border=3D0 cellpadding=3D0 cellspacing=3D0 role=3Dpresentation=
+ style=3Dmso-table-lspace:0;mso-table-rspace:0;word-break:break-word><tr><t=
+d class=3Dpad style=3Dpadding-bottom:25px><div style=3D"color:#5f6368;direc=
+tion:ltr;font-family:&#39;Google Sans Text&#39;,Roboto,arial,sans-serif;fon=
+t-size:14px;font-weight:400;letter-spacing:0;line-height:1.2;text-align:lef=
+t;mso-line-height-alt:17px"><p style=3Dmargin:0>You have received this emai=
+l to update you about important changes to Google=E2=80=99s Terms of Servic=
+e.</p></div></td></tr></table></td></tr></tbody></table></td></tr></tbody><=
+/table></td></tr></tbody></table><!-- End --></body></html>
+--000000000000fa8f190655af2677--

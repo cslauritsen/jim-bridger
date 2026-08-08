@@ -1,0 +1,119 @@
+Return-Path: <info@transvialep.gob.ec>
+Received: from mail.transvialep.gob.ec (mail.transvialep.gob.ec [179.51.140.253])
+ by inbound-smtp.us-east-2.amazonaws.com with SMTP id 0sl4ra9q4belnr5gde9gn0s4gliceo7gulachtg1
+ for noc@planetlauritsen.com;
+ Fri, 03 Jul 2026 14:21:25 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of transvialep.gob.ec designates 179.51.140.253 as permitted sender) client-ip=179.51.140.253; envelope-from=info@transvialep.gob.ec; helo=mail.transvialep.gob.ec;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of transvialep.gob.ec designates 179.51.140.253 as permitted sender) client-ip=179.51.140.253; envelope-from=info@transvialep.gob.ec; helo=mail.transvialep.gob.ec;
+ dkim=pass header.i=@transvialep.gob.ec;
+ dmarc=pass header.from=transvialep.gob.ec;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFGeE80V2JWVGJxblhNV3VhalBXd1FOVTc5aE95cktOZmY1Mk8vNnhUMmhRcnE2Sm1pUzN5VXJ5VTM4Qm5SbHlDNnJjN0YwT1RCQmcwOCtZTG90c05tYWpNT3h4NmlIQnRKSGIwQ2dlVnlOUG9zNTJNdWdGSzlPZVdkMVFCTU5wYzltVHd6TVAydnVLL0xTckJxcGdEaWV1YWNDbzNzTDJCTElsWVQwYWpLNzZlNXpYczhZZUVKSTBKR3BLUUMvRFB4UFdjbVJ5QVNEbFhCblg5U2pOZDM2Yk9ZanRwT1hjYWZickE5eUZNSE5oZEp6K0JSVUVNRlljQ282N1hJakxvRTN6c2E4Tkh6TFlDbGN0MkxtU2oyK0l5M2dUZG44Z3U1WUtXTjZjQ0huWWc9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=gBcF5HeF0v7LphjSOMWNEWE0RsHRk5gQWTPTc1Ql3tg227pCeNvP/P5AHSZPUtHI+M8YvoScpIhLvi5kuDI3LwpDmeAOVcZ2fowJ1ONLosKSIZdrfzWcTCzJ0s60DBb4WyFBkecpvAYjpCsyK6mC31BPcS7UqW11JXoVFLUIC1o=; c=relaxed/simple; s=kra23psoka5qyyh6gdejiiuof3nluwuz; d=amazonses.com; t=1783088486; v=1; bh=JKc1uE3xgVK+4vhpJ4xWKXr4n+jX0ef8B3puEAzovVc=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: from localhost (localhost [127.0.0.1])
+	by mail.transvialep.gob.ec (Postfix) with ESMTP id B830C2101F4;
+	Thu,  2 Jul 2026 20:51:40 -0500 (-05)
+Received: from mail.transvialep.gob.ec ([127.0.0.1])
+ by localhost (mail.transvialep.gob.ec [127.0.0.1]) (amavis, port 10024)
+ with LMTP id aCJifhEQ40f6; Thu,  2 Jul 2026 20:51:40 -0500 (-05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=transvialep.gob.ec;
+	s=default; t=1783043415;
+	bh=JKc1uE3xgVK+4vhpJ4xWKXr4n+jX0ef8B3puEAzovVc=;
+	h=Date:From:To:Subject:Reply-To;
+	b=FboYbT+TivYJr8fKJRFiLAYKsBVShU/s0KtortqyzipvYt4stJaTHhOHnjM3OgDgm
+	 XLxfWGNCHJRX2G/01buXPewgmvyJXuIGEtzP1TY6LGgsju3hLECba7JWk40E3JE352
+	 zDAyQvXoCIIT6mClcUSlcvV/5fOAHa9yXDYhsoxKouOot1LI9XfAQyOancUfGn75u0
+	 6iQlPmclptozGVQFa9K+DcIGt9ReF2Rdy17PNYRKzEj94ry5h/Gltm8xgUUYi+hDwb
+	 F9QB+sfCGRrAZAi8C0wY4oWKegWKiNnbwQ+t/4DW9cCjR0SQEx2yIYkpgb94aO59M+
+	 vFj8NcqVSqWcA==
+Received: from transvialep.gob.ec (localhost [127.0.0.1])
+	by mail.transvialep.gob.ec (Postfix) with ESMTPSA id 74A0C210002;
+	Thu,  2 Jul 2026 20:50:15 -0500 (-05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transvialep.gob.ec;
+	s=default; t=1783043415; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type; bh=I65+YxR1O7nnt10akDvYwXnpYMbcMGbDY2oOF5Hq++s=;
+	b=CQqTjrUcrAWsOSByrT6+hbvbzWOMDlKrBwOO7Ul1/uWzuAPtzg9gOHtIAGAYLohbchAKE9
+	Rt16KRx7wQDI6abdaNxrnTOgRUGtLKKTt+Gd99gXPAqFnJsuByJ4pXeM/h34qnf5m3vxju
+	eAfHw9zbsd9ZYFx4z+hJhJG06NmVsiM=
+MIME-Version: 1.0
+Date: Thu, 02 Jul 2026 18:50:15 -0700
+From: Peter Wang Cheng <info@transvialep.gob.ec>
+To: undisclosed-recipients:;
+Subject: *** SPAM *** Business Proposal ($10m).
+Reply-To: petercheng169@gmail.com
+Mail-Reply-To: petercheng169@gmail.com
+User-Agent: Roundcube/1.6.6
+Message-ID: <f61d5f365522ede44de5f7ff277e3ffc@transvialep.gob.ec>
+X-Sender: info@transvialep.gob.ec
+Content-Type: multipart/alternative;
+ boundary="=_d1fa61ed2061748735459cc2320c5962"
+X-Spamd-Result: default: False [11.90 / 15.00];
+	FREEMAIL_AFF(4.00)[];
+	R_UNDISC_RCPT(3.00)[];
+	FORGED_RECIPIENTS(2.00)[m:,s:noam@iamwebbing.com,s:noamgr@gilat.com,s:noble_jim@prc.com,s:nobocop@nexter.com,s:nobu@decru.com,s:nobuaki_ohashi@gmx.yamaha.com,s:nobull@mail.com,s:nobuo.matsushita@childrenscolorado.org,s:nobuo@layer3tv.com,s:nobuyoshi.kasahara@jalinfotec.co.jp,s:noc-adm@rosaski.com,s:noc-admin@cpss.edu.hk,s:noc-iana@sourceheads.com,s:noc-mib@towertech.it,s:noc-pen@biglist.com,s:noc.nz@kordia.co.nz,s:noc.oid@zmac1.com,s:noc@2reallife.com,s:noc@EU.net,s:noc@KPNQwest.at,s:noc@aeromaritime.de,s:noc@agava.com,s:noc@aics.ad.jp,s:noc@aims.com.au,s:noc@aliadis.fr,s:noc@alinto.net,s:noc@alleysakura.net,s:noc@altasciences.com,s:noc@americancustomercare.com,s:noc@ams-ix.net,s:noc@anchor.net.au,s:noc@apcera.com,s:noc@appfolio.com,s:noc@aptus.co.tz,s:noc@arin.net,s:noc@as39202.net,s:noc@azores.gov.pt,s:noc@baseddept.net,s:noc@bbtele.net,s:noc@belton.co.nz,s:noc@berrybyte.net,s:noc@bitbuzz.com,s:noc@bmi.com,s:noc@box.nl,s:noc@brightok.net,s:noc@butte.edu,s:noc@caerus.net,s:noc@cam.
+ org,s:noc@caneris.com,s:noc@centracomm.net,s:noc@centralnet.ch,s:noc@cleondris.com,s:noc@clnet.cz,s:noc@cloudflare.com,s:noc@cludo.pl,s:noc@connectitnet.com,s:noc@cpicorp.com,s:noc@csc.lt,s:noc@cso.pt,s:noc@csub.edu,s:noc@cvtc.edu,s:noc@cybersmart.co.za,s:noc@dashwire.com,s:noc@dcs.com.gr,s:noc@dcvc.com,s:noc@dsnetwork.ch,s:noc@duth.gr,s:noc@e-dag.ru,s:noc@e-merge.ie,s:noc@ecornell.com,s:noc@edutel.nl,s:noc@ei3.com,s:noc@ekt.gr,s:noc@elnet.ru,s:noc@emerytelcom.com,s:noc@erre-elle.net,s:noc@erudio.ca,s:noc@eurofmc.com,s:noc@excathedra.co,s:noc@extel.ru,s:noc@fiord.ru,s:noc@flox-arts.net,s:noc@fortrustllc.com,s:noc@fritzinger-consult.de,s:noc@frognet.net,s:noc@getbraintree.com,s:noc@godaddy.com,s:noc@gol.com,s:noc@goldenfrog.com,s:noc@gomez.com,s:noc@gopc.net,s:noc@heanet.ie,s:noc@heg.com,s:noc@hiport.it,s:noc@hoehmann.biz,s:noc@hsbxl.be,s:noc@hsventures.org,s:noc@hybrix.fr,s:noc@hyves.nl];
+	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
+	SUBJECT_HAS_CURRENCY(1.00)[];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	FREEMAIL_ENVRCPT(0.00)[mail.com,gmail.com,hotmail.com,sina.com,aol.com,live.co.uk,gmx.net,sina.cn,comcast.net,mail.ru,videotron.ca,btinternet.com,mailcity.com,yahoo.com,163.com,yahoo.co.in,portugalmail.pt];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_ONE(0.00)[1];
+	ARC_NA(0.00)[];
+	FREEMAIL_REPLYTO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	HAS_REPLYTO(0.00)[petercheng169@gmail.com];
+	LOCAL_OUTBOUND(0.00)[];
+	URIBL_BLOCKED(0.00)[transvialep.gob.ec:from_smtp,transvialep.gob.ec:helo,transvialep.gob.ec:mid,transvialep.gob.ec:from_mime,localhost:rdns];
+	TO_DN_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[transvialep.gob.ec:s=default];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[transvialep.gob.ec:from_smtp,transvialep.gob.ec:helo,transvialep.gob.ec:mid,transvialep.gob.ec:from_mime,localhost:rdns];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+
+--=_d1fa61ed2061748735459cc2320c5962
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+
+-- 
+Hello,
+How are you today? I'm Mr. Peter Wang Cheng, I work with the Hang Seng 
+Bank (Hong Kong). I have a business proposal for you worth $10M USD (Ten 
+Million United States Dollars Only) I do solicit for your assistance in 
+effecting this transaction. I intend to give 40% of the total funds as 
+compensation for your assistance. If interested, Please get back to me 
+for more details via EMAIL: petercheng169@gmail.com
+
+Yours Sincerely,
+Peter Wang Cheng
+谢谢你
+--=_d1fa61ed2061748735459cc2320c5962
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 10pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<p><br /></p>
+<div id=3D"signature">-- <br />
+<div class=3D"pre" style=3D"margin: 0; padding: 0; font-family: monospace">=
+Hello,<br />How are you today? I'm Mr. Peter Wang Cheng, I work with the Ha=
+ng Seng Bank (Hong Kong). I have a business proposal for you worth $10M USD=
+ (Ten Million United States Dollars Only) I do solicit for your assistance =
+in effecting this transaction. I intend to give 40% of the total funds as c=
+ompensation for your assistance. If interested, Please get back to me for m=
+ore details via EMAIL: <a href=3D"mailto:petercheng169@gmail.com">peterchen=
+g169@gmail.com</a><br /><br />Yours Sincerely,<br />Peter Wang Cheng<br />=
+=E8=B0=A2=E8=B0=A2=E4=BD=A0</div>
+</div>
+</body></html>
+
+--=_d1fa61ed2061748735459cc2320c5962--
