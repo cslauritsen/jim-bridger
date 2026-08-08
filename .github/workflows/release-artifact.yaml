@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-release-artifact:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -25,12 +25,11 @@ jobs:
           sed -i -E "0,/^version = \".*\"/s//version = \"${RELEASE_VERSION}\"/" Cargo.toml
 
       - name: Build release binary
-        run: |
-          rustup target add x86_64-unknown-linux-musl
-          cargo build --release --target x86_64-unknown-linux-musl
+        run: cargo build --release
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v4
         with:
           name: jim_bridger-${{ github.ref_name }}-linux-amd64
-          path: target/x86_64-unknown-linux-musl/release/jim_bridger
+          path: target/release/jim_bridger
+          if-no-files-found: error
