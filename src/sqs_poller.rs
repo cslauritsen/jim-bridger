@@ -362,13 +362,8 @@ async fn process_email_message(
     }
 
     if !smtp_relay_recipients.is_empty() {
-        let rewritten = email_util::rewrite_sender_headers(
-            raw_email,
-            sender.as_ref(),
-            &config.forwarder_address,
-        );
         if let Err(outcome) = smtp::forward_via_smtp(
-            rewritten,
+            raw_email.to_vec(),
             &config.forwarder_address,
             &smtp_relay_recipients,
             &config.smtp_relay_host,
