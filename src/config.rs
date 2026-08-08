@@ -22,6 +22,8 @@ pub struct Config {
     pub alias_config_path: String,
     pub default_recipient: String,
     pub forwarder_address: String,
+    pub smtp_relay_host: String,
+    pub smtp_relay_port: u16,
     /// Path to the Dovecot LDA binary for local mail delivery.
     pub lda_path: String,
 }
@@ -52,6 +54,14 @@ impl Config {
             default_recipient: env::var("DEFAULT_RECIPIENT").unwrap_or_else(|_| "csl".to_string()),
             forwarder_address: env::var("FORWARDER_ADDRESS")
                 .unwrap_or_else(|_| "ses-forwarder@planetlauritsen.com".to_string()),
+            smtp_relay_host: env::var("SMTP_RELAY_HOST")
+                .unwrap_or_else(|_| "localhost".to_string()),
+            smtp_relay_port: env::var("SMTP_RELAY_PORT")
+                .map(|v| {
+                    v.parse::<u16>()
+                        .expect("SMTP_RELAY_PORT must be a valid u16 integer")
+                })
+                .unwrap_or(25),
             lda_path: env::var("LDA_PATH")
                 .unwrap_or_else(|_| "/usr/lib/dovecot/dovecot-lda".to_string()),
         }

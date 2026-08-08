@@ -1,6 +1,6 @@
+use aws_sdk_sesv2::Client as SesClient;
 use aws_sdk_sesv2::operation::send_email::SendEmailError;
 use aws_sdk_sesv2::types::{Destination, EmailContent, RawMessage};
-use aws_sdk_sesv2::Client as SesClient;
 use aws_smithy_types::Blob;
 
 use super::ProcessOutcome;
@@ -17,7 +17,9 @@ pub async fn forward_via_ses(
     envelope_sender: &str,
     recipients: &[String],
 ) -> Result<(), ProcessOutcome> {
-    tracing::info!("Forwarding message via SES: envelope-from={envelope_sender}, recipients={recipients:?}");
+    tracing::info!(
+        "Forwarding message via SES: envelope-from={envelope_sender}, recipients={recipients:?}"
+    );
 
     // Log the headers of the outgoing message so we can verify the rewrite.
     if tracing::enabled!(tracing::Level::DEBUG) {
@@ -31,9 +33,16 @@ pub async fn forward_via_ses(
     }
 
     let content = EmailContent::builder()
-        .raw(RawMessage::builder().data(Blob::new(raw_message)).build().map_err(|e| {
-            ProcessOutcome::PermanentFailure(format!("Failed to build raw SES message: {e}"))
-        })?)
+        .raw(
+            RawMessage::builder()
+                .data(Blob::new(raw_message))
+                .build()
+                .map_err(|e| {
+                    ProcessOutcome::PermanentFailure(format!(
+                        "Failed to build raw SES message: {e}"
+                    ))
+                })?,
+        )
         .build();
 
     let destination = Destination::builder()
@@ -59,25 +68,31 @@ pub async fn forward_via_ses(
             let service_err = match err {
                 aws_sdk_sesv2::error::SdkError::ServiceError(se) => se.into_err(),
                 aws_sdk_sesv2::error::SdkError::TimeoutError(e) => {
-                    return Err(ProcessOutcome::TransientFailure(format!("SES request timed out: {e:?}")));
+                    return Err(ProcessOutcome::TransientFailure(format!(
+                        "SES request timed out: {e:?}"
+                    )));
                 }
                 aws_sdk_sesv2::error::SdkError::DispatchFailure(e) => {
-                    return Err(ProcessOutcome::TransientFailure(format!("SES dispatch failure: {e:?}")));
+                    return Err(ProcessOutcome::TransientFailure(format!(
+                        "SES dispatch failure: {e:?}"
+                    )));
                 }
                 e => {
-                    return Err(ProcessOutcome::TransientFailure(format!("SES request failed: {e}")));
+                    return Err(ProcessOutcome::TransientFailure(format!(
+                        "SES request failed: {e}"
+                    )));
                 }
             };
             Err(match service_err {
                 // Configuration/application errors: the email itself is fine but our
                 // setup is broken. Preserve the S3 object for reprocessing after the
                 // issue is fixed, and move straight to DLQ (no retries will help).
-                SendEmailError::MessageRejected(e) => {
-                    ProcessOutcome::ParsingFailure(format!("SES rejected message (unverified identity or sandbox restriction): {e}"))
-                }
-                SendEmailError::BadRequestException(e) => {
-                    ProcessOutcome::ParsingFailure(format!("SES bad request (likely a code bug): {e}"))
-                }
+                SendEmailError::MessageRejected(e) => ProcessOutcome::ParsingFailure(format!(
+                    "SES rejected message (unverified identity or sandbox restriction): {e}"
+                )),
+                SendEmailError::BadRequestException(e) => ProcessOutcome::ParsingFailure(format!(
+                    "SES bad request (likely a code bug): {e}"
+                )),
                 SendEmailError::MailFromDomainNotVerifiedException(e) => {
                     ProcessOutcome::ParsingFailure(format!("SES sending domain not verified: {e}"))
                 }

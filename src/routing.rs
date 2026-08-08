@@ -52,11 +52,12 @@ impl CompiledRoutingTable {
 fn compile_routing_table(raw: RawRoutingMap) -> Result<CompiledRoutingTable, String> {
     let mut entries = Vec::with_capacity(raw.len());
     for (pattern, entry) in raw {
-        let re = Regex::new(&pattern)
-            .map_err(|e| format!("Invalid regex {pattern:?}: {e}"))?;
+        let re = Regex::new(&pattern).map_err(|e| format!("Invalid regex {pattern:?}: {e}"))?;
         entries.push((re, entry));
     }
-    Ok(CompiledRoutingTable { entries: Arc::new(entries) })
+    Ok(CompiledRoutingTable {
+        entries: Arc::new(entries),
+    })
 }
 
 struct RoutingState {

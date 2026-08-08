@@ -6,7 +6,11 @@ use tokio::process::Command;
 /// Delivers a raw email message locally via Dovecot's LDA binary, matching
 /// the Python implementation's `deliver_to_dovecot`:
 /// `<lda_path> -d <target_unix_user>` fed the raw message on stdin.
-pub async fn deliver_to_dovecot(raw_email_bytes: &[u8], target_unix_user: &str, lda_path: &str) -> Result<(), String> {
+pub async fn deliver_to_dovecot(
+    raw_email_bytes: &[u8],
+    target_unix_user: &str,
+    lda_path: &str,
+) -> Result<(), String> {
     let mut child = Command::new(lda_path)
         .arg("-d")
         .arg(target_unix_user)

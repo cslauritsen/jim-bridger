@@ -1,5 +1,6 @@
 pub mod lda;
 pub mod ses;
+pub mod smtp;
 
 /// Outcome of attempting to process one email message end-to-end.
 #[derive(Debug)]

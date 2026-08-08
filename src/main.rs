@@ -13,7 +13,10 @@ use routing::RoutingConfig;
 async fn main() {
     let filter = tracing_subscriber::EnvFilter::try_from_env("LOG_LEVEL_ROOT")
         .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"));
-    tracing_subscriber::fmt().with_env_filter(filter).compact().init();
+    tracing_subscriber::fmt()
+        .with_env_filter(filter)
+        .compact()
+        .init();
 
     tracing::info!("jim_bridger {}", env!("GIT_DESCRIBE"));
 

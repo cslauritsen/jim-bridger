@@ -6,7 +6,7 @@ use aws_sdk_sesv2::Client as SesClient;
 use aws_sdk_sqs::Client as SqsClient;
 
 use crate::config::Config;
-use crate::delivery::{lda, ses, ProcessOutcome};
+use crate::delivery::{ProcessOutcome, lda, ses, smtp};
 use crate::email_util;
 use crate::routing::RoutingConfig;
 
@@ -34,7 +34,8 @@ pub async fn run(config: Arc<Config>, routing: Arc<RoutingConfig>) {
 
     tracing::info!(
         "Starting SQS polling loop (SQS/S3 region={}, SES region={})",
-        config.aws_region, config.ses_region
+        config.aws_region,
+        config.ses_region
     );
     loop {
         if let Err(e) = poll_once(&config, &routing, &sqs, &s3, &sesc, &queue_url).await {
@@ -93,7 +94,9 @@ async fn process_sqs_message(
     let retry_count: u32 = msg
         .attributes
         .as_ref()
-        .and_then(|a| a.get(&aws_sdk_sqs::types::MessageSystemAttributeName::ApproximateReceiveCount))
+        .and_then(|a| {
+            a.get(&aws_sdk_sqs::types::MessageSystemAttributeName::ApproximateReceiveCount)
+        })
         .and_then(|v| v.parse().ok())
         .unwrap_or(1);
 
@@ -101,7 +104,8 @@ async fn process_sqs_message(
         Ok(v) => v,
         Err(e) => {
             tracing::error!("Error processing SQS message: {e}");
-            move_to_dlq_if_exhausted(config, sqs, queue_url, &receipt_handle, &body, retry_count).await;
+            move_to_dlq_if_exhausted(config, sqs, queue_url, &receipt_handle, &body, retry_count)
+                .await;
             return;
         }
     };
@@ -155,14 +159,22 @@ async fn process_sqs_message(
 
                 match process_email_message(config, routing, sesc, &raw_email).await {
                     ProcessOutcome::Success => {
-                        if let Err(e) = s3.delete_object().bucket(&s3_bucket).key(&s3_key).send().await {
+                        if let Err(e) = s3
+                            .delete_object()
+                            .bucket(&s3_bucket)
+                            .key(&s3_key)
+                            .send()
+                            .await
+                        {
                             tracing::error!("Failed to delete S3 object {s3url}: {e}");
                         } else {
                             tracing::info!("Successfully processed and deleted S3 object: {s3url}");
                         }
                     }
                     ProcessOutcome::ParsingFailure(err) => {
-                        tracing::error!("{s3url} Could not parse email: {err} — S3 object preserved for inspection, moving SQS message to DLQ immediately");
+                        tracing::error!(
+                            "{s3url} Could not parse email: {err} — S3 object preserved for inspection, moving SQS message to DLQ immediately"
+                        );
                         // Don't delete the S3 object — leave it for manual inspection.
                         // Don't retry — a corrupt message will never parse. Go straight to DLQ
                         // and delete the original SQS message.
@@ -172,10 +184,20 @@ async fn process_sqs_message(
                     ProcessOutcome::PermanentFailure(err) => {
                         tracing::error!("{s3url} Permanent failure processing email: {err}");
                         // Retrying will never succeed; delete the S3 object to avoid leaking it.
-                        if let Err(e) = s3.delete_object().bucket(&s3_bucket).key(&s3_key).send().await {
-                            tracing::error!("Failed to delete S3 object {s3url} after permanent failure: {e}");
+                        if let Err(e) = s3
+                            .delete_object()
+                            .bucket(&s3_bucket)
+                            .key(&s3_key)
+                            .send()
+                            .await
+                        {
+                            tracing::error!(
+                                "Failed to delete S3 object {s3url} after permanent failure: {e}"
+                            );
                         } else {
-                            tracing::warn!("Deleted S3 object {s3url} after permanent failure (email not delivered)");
+                            tracing::warn!(
+                                "Deleted S3 object {s3url} after permanent failure (email not delivered)"
+                            );
                         }
                     }
                     ProcessOutcome::TransientFailure(err) => {
@@ -206,7 +228,9 @@ async fn process_sqs_message(
     }
 }
 
-fn is_no_such_key(err: &aws_sdk_s3::error::SdkError<aws_sdk_s3::operation::get_object::GetObjectError>) -> bool {
+fn is_no_such_key(
+    err: &aws_sdk_s3::error::SdkError<aws_sdk_s3::operation::get_object::GetObjectError>,
+) -> bool {
     matches!(
         err,
         aws_sdk_s3::error::SdkError::ServiceError(se)
@@ -255,7 +279,8 @@ async fn move_to_dlq_if_exhausted(
 
 /// Parses the raw email, resolves each recipient against the alias routing
 /// map, delivers to Dovecot LDA for `lda` targets, and forwards via SES for
-/// `smtp` targets. Mirrors `process_email_message` in the Python service.
+/// `smtp` targets or via localhost relay for `smtp_relay` targets. Mirrors
+/// `process_email_message` in the Python service.
 ///
 /// CAUTION (not fixed here, needs a design decision): if delivery to one
 /// target fails after earlier targets in the same message already succeeded
@@ -279,42 +304,77 @@ async fn process_email_message(
     let routing_map = routing.get().await;
 
     let mut smtp_recipients = Vec::new();
+    let mut smtp_relay_recipients = Vec::new();
 
     for r in &recipients {
-    let norm_r = r.to_lowercase();
-    let matching = routing_map.matching(&norm_r);
-    if matching.is_empty() {
-        tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
-        continue;
-    }
-    for entry in matching {
-        for rule in &entry.targets {
-            match rule.target_type.as_str() {
-                "lda" => {
-                    tracing::info!("local delivery {norm_r} -> {}", rule.target);
-                    if let Err(e) = lda::deliver_to_dovecot(raw_email, &rule.target, &config.lda_path).await {
-                        return ProcessOutcome::TransientFailure(format!("Error processing email: {e}"));
+        let norm_r = r.to_lowercase();
+        let matching = routing_map.matching(&norm_r);
+        if matching.is_empty() {
+            tracing::warn!("No routing entry found for recipient: {norm_r} — message dropped");
+            continue;
+        }
+        for entry in matching {
+            for rule in &entry.targets {
+                match rule.target_type.as_str() {
+                    "lda" => {
+                        tracing::info!("local delivery {norm_r} -> {}", rule.target);
+                        if let Err(e) =
+                            lda::deliver_to_dovecot(raw_email, &rule.target, &config.lda_path).await
+                        {
+                            return ProcessOutcome::TransientFailure(format!(
+                                "Error processing email: {e}"
+                            ));
+                        }
                     }
-                }
-                "smtp" => {
-                    tracing::info!("smtp forward {norm_r} -> {}", rule.target);
-                    if !smtp_recipients.contains(&rule.target) {
-                        smtp_recipients.push(rule.target.clone());
+                    "smtp" => {
+                        tracing::info!("smtp forward {norm_r} -> {}", rule.target);
+                        if !smtp_recipients.contains(&rule.target) {
+                            smtp_recipients.push(rule.target.clone());
+                        }
                     }
-                }
-                other => {
-                    return ProcessOutcome::PermanentFailure(format!(
-                        "Unknown routing rule: {other} for {norm_r}"
-                    ));
+                    "smtp_relay" => {
+                        tracing::info!("smtp relay forward {norm_r} -> {}", rule.target);
+                        if !smtp_relay_recipients.contains(&rule.target) {
+                            smtp_relay_recipients.push(rule.target.clone());
+                        }
+                    }
+                    other => {
+                        return ProcessOutcome::PermanentFailure(format!(
+                            "Unknown routing rule: {other} for {norm_r}"
+                        ));
+                    }
                 }
             }
         }
     }
-    }
 
     if !smtp_recipients.is_empty() {
-        let rewritten = email_util::rewrite_sender_headers(raw_email, sender.as_ref(), &config.forwarder_address);
-        if let Err(outcome) = ses::forward_via_ses(sesc, rewritten, &config.forwarder_address, &smtp_recipients).await
+        let rewritten = email_util::rewrite_sender_headers(
+            raw_email,
+            sender.as_ref(),
+            &config.forwarder_address,
+        );
+        if let Err(outcome) =
+            ses::forward_via_ses(sesc, rewritten, &config.forwarder_address, &smtp_recipients).await
+        {
+            return outcome;
+        }
+    }
+
+    if !smtp_relay_recipients.is_empty() {
+        let rewritten = email_util::rewrite_sender_headers(
+            raw_email,
+            sender.as_ref(),
+            &config.forwarder_address,
+        );
+        if let Err(outcome) = smtp::forward_via_smtp(
+            rewritten,
+            &config.forwarder_address,
+            &smtp_relay_recipients,
+            &config.smtp_relay_host,
+            config.smtp_relay_port,
+        )
+        .await
         {
             return outcome;
         }

@@ -10,7 +10,7 @@ Jim Bridger operates as an SQS long-polling consumer that:
 2. **Fetches email**: Retrieves raw email messages from S3
 3. **Routes email**: Looks up recipient addresses in a JSON routing configuration file and applies routing rules
 4. **Delivers locally**: Forwards mail to local Unix user mailboxes via Dovecot LDA (Local Delivery Agent)
-5. **Delivers remotely**: Forwards mail to external recipients via AWS SES
+5. **Delivers remotely**: Forwards mail to external recipients via AWS SES and/or an SMTP relay
 6. **Cleans up**: Deletes processed messages from SQS and email objects from S3
 
 ### Routing Rules
@@ -19,6 +19,7 @@ Email recipients are matched against a JSON routing configuration (`aliases.json
 
 - **`lda` targets**: Deliver to a local Unix user mailbox via Dovecot LDA
 - **`smtp` targets**: Forward to an external email address via AWS SES
+- **`smtp_relay` targets**: Forward to an external email address via SMTP relay (Postfix smarthost, no auth)
 
 Example routing configuration:
 
@@ -32,7 +33,8 @@ Example routing configuration:
   "admin@example.com": {
     "targets": [
       { "target": "admin", "type": "lda" },
-      { "target": "external@otherdomain.com", "type": "smtp" }
+      { "target": "external@otherdomain.com", "type": "smtp" },
+      { "target": "relay-target@otherdomain.com", "type": "smtp_relay" }
     ]
   }
 }
@@ -64,6 +66,8 @@ Jim Bridger is configured entirely through environment variables.
 - **`ALIAS_CONFIG_PATH`** (default: `/etc/jim-bridger/aliases.json`): Path to the routing configuration JSON file
 - **`DEFAULT_RECIPIENT`** (default: `csl`): Default Unix user for mail with no matching routing rule
 - **`FORWARDER_ADDRESS`** (default: `ses-forwarder@planetlauritsen.com`): "From" address for SES-forwarded mail
+- **`SMTP_RELAY_HOST`** (default: `localhost`): Hostname for `smtp_relay` delivery
+- **`SMTP_RELAY_PORT`** (default: `25`): Port for `smtp_relay` delivery
 
 ### Local Delivery Configuration
 
@@ -96,6 +100,8 @@ export SQS_VISIBILITY_TIMEOUT=300
 export ALIAS_CONFIG_PATH=/etc/jim-bridger/aliases.json
 export DEFAULT_RECIPIENT=csl
 export FORWARDER_ADDRESS=ses-forwarder@example.com
+export SMTP_RELAY_HOST=localhost
+export SMTP_RELAY_PORT=25
 export LDA_PATH=/usr/lib/dovecot/dovecot-lda
 export LOG_LEVEL_ROOT=info
 cargo run --release

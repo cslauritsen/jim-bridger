@@ -59,7 +59,11 @@ pub fn parse_message(raw: &[u8]) -> Option<Message<'_>> {
 ///   doesn't already carry one, so replies reach the real sender.
 ///
 /// The body and all other headers are preserved byte-for-byte.
-pub fn rewrite_sender_headers(raw: &[u8], sender: Option<&SenderInfo>, forwarder_address: &str) -> Vec<u8> {
+pub fn rewrite_sender_headers(
+    raw: &[u8],
+    sender: Option<&SenderInfo>,
+    forwarder_address: &str,
+) -> Vec<u8> {
     let (header_block, sep, body) = match split_header_block(raw) {
         Some(parts) => parts,
         None => return raw.to_vec(),
@@ -157,9 +161,7 @@ fn fold_header_lines(header_text: &str) -> Vec<String> {
             .next()
             .map(|c| c == ' ' || c == '\t')
             .unwrap_or(false);
-        if starts_folded
-            && let Some(last) = lines.last_mut()
-        {
+        if starts_folded && let Some(last) = lines.last_mut() {
             last.push_str(raw_line);
             continue;
         }
@@ -191,7 +193,9 @@ fn split_keep_ending(text: &str) -> Vec<&str> {
 /// Returns true if any header line matching `name` (case-insensitive) is present.
 fn has_header(lines: &[String], name: &str) -> bool {
     let prefix = format!("{name}:");
-    lines.iter().any(|l| l.len() >= prefix.len() && l[..prefix.len()].eq_ignore_ascii_case(&prefix))
+    lines
+        .iter()
+        .any(|l| l.len() >= prefix.len() && l[..prefix.len()].eq_ignore_ascii_case(&prefix))
 }
 
 /// Removes all header lines matching `name` (case-insensitive).
@@ -295,7 +299,11 @@ Body text.\r\n";
     fn rewrites_from_with_display_name_and_preserves_existing_reply_to() {
         let msg = parse_message(SAMPLE_WITH_REPLY_TO).unwrap();
         let sender = original_sender(&msg);
-        let rewritten = rewrite_sender_headers(SAMPLE_WITH_REPLY_TO, sender.as_ref(), "forwarder@example.com");
+        let rewritten = rewrite_sender_headers(
+            SAMPLE_WITH_REPLY_TO,
+            sender.as_ref(),
+            "forwarder@example.com",
+        );
         let text = String::from_utf8(rewritten).unwrap();
         assert!(text.contains("\"Alice (via example.com)\" <forwarder@example.com>"));
         // Existing Reply-To is preserved; original sender is NOT injected over it.
@@ -307,7 +315,8 @@ Body text.\r\n";
     fn inserts_reply_to_when_missing() {
         let msg = parse_message(SAMPLE_TO_CC).unwrap();
         let sender = original_sender(&msg);
-        let rewritten = rewrite_sender_headers(SAMPLE_TO_CC, sender.as_ref(), "forwarder@example.com");
+        let rewritten =
+            rewrite_sender_headers(SAMPLE_TO_CC, sender.as_ref(), "forwarder@example.com");
         let text = String::from_utf8(rewritten).unwrap();
         assert!(text.contains("\"Alice (via example.com)\" <forwarder@example.com>"));
         assert!(text.contains("Reply-To: alice@example.com\r\n"));
@@ -361,8 +370,14 @@ mod real_sample_tests {
     fn x_forwarded_to_takes_precedence_on_real_message() {
         let raw = fixture("atq3c8qh13hbclfkcnckqg329imgus5bcqlje281");
         let msg = parse_message(&raw).expect("should parse real message");
-        assert_eq!(extract_recipients(&msg, "csl"), vec!["chad@planetlauritsen.com"]);
-        assert_eq!(original_sender(&msg).map(|s| s.email).as_deref(), Some("noreply@civicplus.com"));
+        assert_eq!(
+            extract_recipients(&msg, "csl"),
+            vec!["chad@planetlauritsen.com"]
+        );
+        assert_eq!(
+            original_sender(&msg).map(|s| s.email).as_deref(),
+            Some("noreply@civicplus.com")
+        );
     }
 
     /// Plain real message with a single `To` address and normal `From`.
@@ -370,8 +385,14 @@ mod real_sample_tests {
     fn plain_message_extracts_to_and_sender() {
         let raw = fixture("s9om2v2rqef3o1of9sdb76tpoojo8banlhachtg1");
         let msg = parse_message(&raw).expect("should parse real message");
-        assert_eq!(extract_recipients(&msg, "csl"), vec!["sherlink@planetlauritsen.com"]);
-        assert_eq!(original_sender(&msg).map(|s| s.email).as_deref(), Some("google-noreply@google.com"));
+        assert_eq!(
+            extract_recipients(&msg, "csl"),
+            vec!["sherlink@planetlauritsen.com"]
+        );
+        assert_eq!(
+            original_sender(&msg).map(|s| s.email).as_deref(),
+            Some("google-noreply@google.com")
+        );
     }
 
     /// Real forwarded message (a "Fwd:" from Chad relayed through the
@@ -385,8 +406,10 @@ mod real_sample_tests {
         let raw = fixture("u1edf3ubb5jbs5fecpumbbm70bhk0vtmuu51ca01");
         let msg = parse_message(&raw).expect("should parse real message");
         let sender = original_sender(&msg);
-        let rewritten = rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
-        let (header_block, _, _) = split_header_block(&rewritten).expect("should have header block");
+        let rewritten =
+            rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
+        let (header_block, _, _) =
+            split_header_block(&rewritten).expect("should have header block");
         let header_text = String::from_utf8_lossy(header_block);
         assert!(
             !has_header(&fold_header_lines(&header_text), "DKIM-Signature"),
@@ -416,7 +439,8 @@ mod real_sample_tests {
             let raw = fixture(name);
             let msg = parse_message(&raw).unwrap_or_else(|| panic!("failed to parse {name}"));
             let sender = original_sender(&msg);
-            let rewritten = rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
+            let rewritten =
+                rewrite_sender_headers(&raw, sender.as_ref(), "ses-forwarder@planetlauritsen.com");
 
             let original_body = split_header_block(&raw).map(|(_, _, body)| body);
             let rewritten_body = split_header_block(&rewritten).map(|(_, _, body)| body);
@@ -427,4 +451,3 @@ mod real_sample_tests {
         }
     }
 }
-
